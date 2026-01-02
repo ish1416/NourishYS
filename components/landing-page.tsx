@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { 
   Shield, 
@@ -12,7 +12,14 @@ import {
   CheckCircle2, 
   ArrowRight,
   Play,
-  Star
+  Star,
+  TrendingUp,
+  AlertTriangle,
+  Heart,
+  Globe,
+  Activity,
+  Sparkles,
+  Apple
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -21,7 +28,15 @@ import { Badge } from '@/components/ui/badge'
 export default function LandingPage() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [animatedStats, setAnimatedStats] = useState({ population: 0, alerts: 0, accuracy: 0 })
   const router = useRouter()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimatedStats({ population: 1200000, alerts: 12, accuracy: 94 })
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleDashboardTransition = () => {
     setIsTransitioning(true)
@@ -41,29 +56,29 @@ export default function LandingPage() {
         </div>
       )}
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border/50">
+      <nav className="sticky top-0 z-50 bg-gradient-to-r from-[#FFF3C4]/80 via-card/80 to-[#FFF3C4]/80 backdrop-blur-md border-b border-[#6FBF44]/20 shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
-                <Shield className="h-6 w-6 text-white" />
+              <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] flex items-center justify-center shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
+                <Apple className="h-6 w-6 text-white drop-shadow-sm" />
               </div>
               <div>
-                <h1 className="font-bold text-lg text-foreground">Yellowsense</h1>
-                <p className="text-xs text-muted-foreground">AI Nourishment Intelligence</p>
+                <h1 className="font-bold text-lg bg-gradient-to-r from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] bg-clip-text text-transparent">Nourishment AI</h1>
+                <p className="text-xs text-muted-foreground font-medium">Intelligence System</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="ghost" className="hidden md:flex">
+              <Button variant="ghost" className="hidden md:flex hover:bg-[#6FBF44]/10">
                 Solutions
               </Button>
-              <Button variant="ghost" className="hidden md:flex">
+              <Button variant="ghost" className="hidden md:flex hover:bg-[#F6A23A]/10">
                 About
               </Button>
-              <Button variant="outline">
+              <Button variant="outline" className="border-[#E94A7F]/30 hover:bg-[#E94A7F]/10">
                 Contact
               </Button>
-              <Button onClick={() => router.push('/dashboard')}>
+              <Button onClick={() => router.push('/dashboard')} className="bg-gradient-to-r from-[#6FBF44] to-[#F6A23A] hover:from-[#6FBF44]/90 hover:to-[#F6A23A]/90">
                 Dashboard
               </Button>
             </div>
@@ -81,7 +96,7 @@ export default function LandingPage() {
               </Badge>
               <h1 className="text-5xl font-bold text-foreground leading-tight">
                 AI-Powered
-                <span className="text-primary block">Nourishment Intelligence</span>
+                <span className="bg-gradient-to-r from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] bg-clip-text text-transparent block">Nourishment Intelligence</span>
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed max-w-lg">
                 Transform nutrition monitoring with real-time AI insights, early warning systems, and personalized interventions for healthier communities.
@@ -124,23 +139,58 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-card p-3 rounded-lg">
-                    <p className="text-2xl font-bold text-primary">1.2M</p>
+                  <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-3 rounded-lg border border-primary/20">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Globe className="h-4 w-4 text-primary" />
+                      <p className="text-2xl font-bold text-primary">
+                        {(animatedStats.population / 1000000).toFixed(1)}M
+                      </p>
+                    </div>
                     <p className="text-xs text-muted-foreground">Population Monitored</p>
+                    <div className="w-full bg-primary/20 rounded-full h-1 mt-2">
+                      <div className="bg-primary h-1 rounded-full w-4/5 transition-all duration-1000"></div>
+                    </div>
                   </div>
-                  <div className="bg-card p-3 rounded-lg">
-                    <p className="text-2xl font-bold text-destructive">12</p>
+                  <div className="bg-gradient-to-br from-orange/10 to-orange/5 p-3 rounded-lg border border-orange/20">
+                    <div className="flex items-center gap-2 mb-1">
+                      <AlertTriangle className="h-4 w-4 text-orange" />
+                      <p className="text-2xl font-bold text-orange">{animatedStats.alerts}</p>
+                    </div>
                     <p className="text-xs text-muted-foreground">Active Alerts</p>
+                    <div className="w-full bg-orange/20 rounded-full h-1 mt-2">
+                      <div className="bg-orange h-1 rounded-full w-3/4 transition-all duration-1000"></div>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="bg-card p-4 rounded-lg">
+                <div className="bg-gradient-to-br from-pink/10 to-pink/5 p-3 rounded-lg border border-pink/20 mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Risk Assessment</span>
+                    <div className="flex items-center gap-2">
+                      <Activity className="h-4 w-4 text-pink" />
+                      <span className="text-sm font-medium">AI Accuracy</span>
+                    </div>
+                    <span className="text-sm text-pink font-bold">{animatedStats.accuracy}%</span>
+                  </div>
+                  <div className="w-full bg-pink/20 rounded-full h-2">
+                    <div className="bg-gradient-to-r from-pink to-pink/80 h-2 rounded-full transition-all duration-1000" style={{width: `${animatedStats.accuracy}%`}}></div>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-destructive/10 to-destructive/5 p-4 rounded-lg border border-destructive/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-destructive" />
+                      <span className="text-sm font-medium">Risk Assessment</span>
+                    </div>
                     <span className="text-sm text-destructive font-bold">High Risk</span>
                   </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-destructive h-2 rounded-full w-3/4"></div>
+                  <div className="w-full bg-destructive/20 rounded-full h-2">
+                    <div className="bg-gradient-to-r from-destructive to-destructive/80 h-2 rounded-full w-3/4 transition-all duration-1000"></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                    <span>Low</span>
+                    <span>Medium</span>
+                    <span>High</span>
                   </div>
                 </div>
               </div>
@@ -165,17 +215,26 @@ export default function LandingPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+          <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
             <CardHeader>
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                <Brain className="h-6 w-6 text-primary" />
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                <Brain className="h-6 w-6 text-white" />
               </div>
-              <CardTitle className="text-xl">AI Intelligence Pulse</CardTitle>
+              <CardTitle className="text-xl text-primary">AI Intelligence Pulse</CardTitle>
               <CardDescription>
                 Real-time monitoring of nutrition risk clusters with predictive analytics and automated insights.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <div className="bg-card/50 p-3 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">Processing Speed</span>
+                  <span className="text-sm text-primary font-bold">2.3ms</span>
+                </div>
+                <div className="w-full bg-primary/20 rounded-full h-1.5">
+                  <div className="bg-primary h-1.5 rounded-full w-5/6 transition-all duration-1000"></div>
+                </div>
+              </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-primary" />
@@ -193,81 +252,169 @@ export default function LandingPage() {
             </CardContent>
           </Card>
 
-          <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+          <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-orange/5 to-orange/10 border-orange/20">
             <CardHeader>
-              <div className="h-12 w-12 rounded-xl bg-orange/10 flex items-center justify-center mb-4 group-hover:bg-orange/20 transition-colors">
-                <Target className="h-6 w-6 text-orange" />
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-orange to-orange/80 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                <Target className="h-6 w-6 text-white" />
               </div>
-              <CardTitle className="text-xl">Early Warning System</CardTitle>
+              <CardTitle className="text-xl text-orange">Early Warning System</CardTitle>
               <CardDescription>
                 Proactive alerts and intervention recommendations before nutrition crises develop.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <div className="bg-card/50 p-3 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">Alert Accuracy</span>
+                  <span className="text-sm text-orange font-bold">97.2%</span>
+                </div>
+                <div className="w-full bg-orange/20 rounded-full h-1.5">
+                  <div className="bg-orange h-1.5 rounded-full w-full transition-all duration-1000"></div>
+                </div>
+              </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <CheckCircle2 className="h-4 w-4 text-orange" />
                   Crisis prevention alerts
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <CheckCircle2 className="h-4 w-4 text-orange" />
                   Risk threshold monitoring
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <CheckCircle2 className="h-4 w-4 text-orange" />
                   Automated escalation
                 </li>
               </ul>
             </CardContent>
           </Card>
 
-          <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+          <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-pink/5 to-pink/10 border-pink/20">
             <CardHeader>
-              <div className="h-12 w-12 rounded-xl bg-pink/10 flex items-center justify-center mb-4 group-hover:bg-pink/20 transition-colors">
-                <Users className="h-6 w-6 text-pink" />
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-pink to-pink/80 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                <Users className="h-6 w-6 text-white" />
               </div>
-              <CardTitle className="text-xl">Beneficiary AI Assistant</CardTitle>
+              <CardTitle className="text-xl text-pink">Beneficiary AI Assistant</CardTitle>
               <CardDescription>
                 Personal nutrition guidance with multilingual AI support for individual beneficiaries.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <div className="bg-card/50 p-3 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">User Satisfaction</span>
+                  <span className="text-sm text-pink font-bold">4.8/5</span>
+                </div>
+                <div className="flex gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className={`h-3 w-3 ${i < 5 ? 'fill-pink text-pink' : 'text-muted'}`} />
+                  ))}
+                </div>
+              </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <CheckCircle2 className="h-4 w-4 text-pink" />
                   Personalized recommendations
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <CheckCircle2 className="h-4 w-4 text-pink" />
                   Multilingual support
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <CheckCircle2 className="h-4 w-4 text-pink" />
                   Progress tracking
                 </li>
               </ul>
             </CardContent>
           </Card>
         </div>
+        
+        {/* Stats Section */}
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="text-center p-6 bg-white/80 backdrop-blur-sm border-2 border-[#6FBF44]/30 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#6FBF44] to-[#6FBF44]/80 flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Heart className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-3xl font-bold bg-gradient-to-r from-[#6FBF44] to-[#6FBF44]/80 bg-clip-text text-transparent mb-2">50K+</h3>
+            <p className="text-sm text-muted-foreground font-medium">Lives Improved</p>
+          </Card>
+          
+          <Card className="text-center p-6 bg-white/80 backdrop-blur-sm border-2 border-[#F6A23A]/30 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#F6A23A] to-[#F6A23A]/80 flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Globe className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-3xl font-bold bg-gradient-to-r from-[#F6A23A] to-[#F6A23A]/80 bg-clip-text text-transparent mb-2">25+</h3>
+            <p className="text-sm text-muted-foreground font-medium">Countries Served</p>
+          </Card>
+          
+          <Card className="text-center p-6 bg-white/80 backdrop-blur-sm border-2 border-[#E94A7F]/30 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#E94A7F] to-[#E94A7F]/80 flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Sparkles className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-3xl font-bold bg-gradient-to-r from-[#E94A7F] to-[#E94A7F]/80 bg-clip-text text-transparent mb-2">99.1%</h3>
+            <p className="text-sm text-muted-foreground font-medium">Uptime Reliability</p>
+          </Card>
+          
+          <Card className="text-center p-6 bg-white/80 backdrop-blur-sm border-2 border-green-500/30 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-green-500 to-green-500/80 flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <TrendingUp className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-3xl font-bold bg-gradient-to-r from-green-500 to-green-500/80 bg-clip-text text-transparent mb-2">40%</h3>
+            <p className="text-sm text-muted-foreground font-medium">Risk Reduction</p>
+          </Card>
+        </div>
       </section>
 
       {/* CTA Section */}
       <section className="container mx-auto px-6 py-20">
-        <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-          <CardContent className="text-center py-16">
+        <Card className="bg-gradient-to-br from-primary/10 via-orange/5 to-pink/10 border border-primary/20 overflow-hidden relative">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary/20 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-pink/20 to-transparent rounded-full blur-2xl"></div>
+          <CardContent className="text-center py-16 relative z-10">
+            <div className="flex justify-center mb-6">
+              <div className="flex items-center gap-2 bg-card/80 backdrop-blur-sm px-4 py-2 rounded-full border border-primary/20">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-primary">AI-Powered Intelligence</span>
+              </div>
+            </div>
             <h2 className="text-4xl font-bold text-foreground mb-4">
               Ready to Transform Nutrition Monitoring?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join leading NGOs and government agencies using Yellowsense to create healthier communities through AI-powered nutrition intelligence.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="gap-2 shadow-lg" onClick={handleDashboardTransition}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <Button size="lg" className="gap-2 shadow-lg bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70" onClick={handleDashboardTransition}>
                 Open Dashboard <ArrowRight className="h-5 w-5" />
               </Button>
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" className="border-primary/30 hover:bg-primary/5">
                 Schedule Demo
               </Button>
+            </div>
+            
+            {/* Mini dashboard preview */}
+            <div className="max-w-md mx-auto bg-card/50 backdrop-blur-sm p-4 rounded-xl border border-border/50">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium">Live System Status</span>
+                <div className="flex items-center gap-1">
+                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                  <span className="text-xs text-green-600">Active</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div className="bg-primary/10 p-2 rounded-lg">
+                  <p className="text-lg font-bold text-primary">1.2M</p>
+                  <p className="text-xs text-muted-foreground">Monitored</p>
+                </div>
+                <div className="bg-orange/10 p-2 rounded-lg">
+                  <p className="text-lg font-bold text-orange">94%</p>
+                  <p className="text-xs text-muted-foreground">Accuracy</p>
+                </div>
+                <div className="bg-pink/10 p-2 rounded-lg">
+                  <p className="text-lg font-bold text-pink">24/7</p>
+                  <p className="text-xs text-muted-foreground">Support</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -279,10 +426,10 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
-                  <Shield className="h-4 w-4 text-primary" />
+                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] flex items-center justify-center">
+                  <Apple className="h-4 w-4 text-white" />
                 </div>
-                <span className="font-bold text-foreground">Yellowsense</span>
+                <span className="font-bold bg-gradient-to-r from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] bg-clip-text text-transparent">Nourishment AI</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 AI-powered nourishment intelligence for healthier communities worldwide.
@@ -322,7 +469,7 @@ export default function LandingPage() {
           
           <div className="border-t border-border/50 mt-12 pt-8 text-center">
             <p className="text-sm text-muted-foreground">
-              © 2025 Yellowsense Technologies. All rights reserved.
+              © 2025 Nourishment AI Technologies. All rights reserved.
             </p>
           </div>
         </div>
