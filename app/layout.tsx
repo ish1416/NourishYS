@@ -12,25 +12,22 @@ const _geistMono = V0_Font_Geist_Mono({ subsets: ['latin'], weight: ["100","200"
 const _sourceSerif_4 = V0_Font_Source_Serif_4({ subsets: ['latin'], weight: ["200","300","400","500","600","700","800","900"] })
 
 export const metadata: Metadata = {
-  title: "Yellowsense Technologies | AI Nourishment Intelligence",
-  description: "AI-Powered Nourishment Intelligence & Early-Warning System",
+  title: "Nourish AI | AI-Powered Nutrition Intelligence System",
+  description: "AI-Powered Nourishment Intelligence & Early-Warning System for nutrition monitoring and intervention",
   generator: "v0.app",
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
         url: "/icon.svg",
         type: "image/svg+xml",
       },
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
     ],
-    apple: "/apple-icon.png",
+    apple: "/apple-icon.svg",
+    shortcut: "/icon.svg",
   },
 }
 
