@@ -67,6 +67,28 @@ export default function YellowsenseDashboard() {
     proteinIntake: "medium",
     schoolAttendance: true
   })
+  const [riskResult, setRiskResult] = useState<{
+    risk: number;
+    level: string;
+    color: string;
+    recommendations: string[];
+  } | null>(null)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const generateRiskAssessment = () => {
+    setIsGenerating(true)
+    setTimeout(() => {
+      const mockResults = [
+        { risk: 23, level: "Low", color: "primary", recommendations: ["Maintain current diet", "Add seasonal fruits", "Continue regular meals"] },
+        { risk: 45, level: "Medium", color: "orange", recommendations: ["Increase protein intake", "Add green vegetables", "Ensure 3 meals daily"] },
+        { risk: 67, level: "Medium", color: "orange", recommendations: ["Increase meal frequency", "Add protein sources", "Include micronutrients"] },
+        { risk: 78, level: "High", color: "destructive", recommendations: ["Immediate intervention needed", "Add high-protein foods", "Medical consultation required"] },
+        { risk: 89, level: "Critical", color: "destructive", recommendations: ["Emergency intervention", "Immediate medical attention", "Nutritional supplements required"] }
+      ]
+      const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)]
+      setRiskResult(randomResult)
+      setIsGenerating(false)
+    }, 2000)
+  }
   const router = useRouter()
 
   useEffect(() => {
@@ -205,7 +227,7 @@ export default function YellowsenseDashboard() {
         }
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-6">
         <StatsCard
           title="AI Accuracy"
           value="91%"
@@ -558,19 +580,20 @@ export default function YellowsenseDashboard() {
             )})}
           </div>
           <div className="p-6 bg-gradient-to-r from-destructive/5 to-destructive/10 border-t border-destructive/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
-                  <span>4 Critical cases need immediate attention</span>
+                  <span className="text-xs sm:text-sm">4 Critical cases</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <div className="h-2 w-2 rounded-full bg-orange" />
-                  <span>19 High risk cases monitored</span>
+                  <span className="text-xs sm:text-sm">19 High risk</span>
                 </div>
               </div>
-              <Button variant="destructive" className="shadow-md">
-                View All High Risk Beneficiaries (23)
+              <Button variant="destructive" className="shadow-md text-xs sm:text-sm w-full sm:w-auto">
+                <span className="hidden sm:inline">View All High Risk Beneficiaries (23)</span>
+                <span className="sm:hidden">View All (23)</span>
               </Button>
             </div>
           </div>
@@ -586,7 +609,7 @@ export default function YellowsenseDashboard() {
           <CardDescription>Nutrition risk assessment across 20 Indian states</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {indianStates.slice(0, 6).map((state, i) => (
               <div
                 key={i}
@@ -712,39 +735,39 @@ export default function YellowsenseDashboard() {
                 { name: 'Echo-5', risk: 83, population: '28K', eta: '8 hours', severity: 'High', lastAlert: '8 min ago', interventions: 1 }
               ].map((cluster, i) => (
                 <div key={i} className="p-4 border-b border-destructive/10 hover:bg-destructive/5 transition-all cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="h-10 w-10 rounded-full bg-destructive/20 flex items-center justify-center">
-                          <AlertTriangle className="h-5 w-5 text-destructive" />
-                        </div>
-                        <div className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-destructive animate-ping" />
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div className="relative flex-shrink-0">
+                      <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-destructive/20 flex items-center justify-center">
+                        <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-destructive" />
                       </div>
-                      <div>
-                        <p className="font-semibold text-destructive">{cluster.name}</p>
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1"><Users className="h-3 w-3" />{cluster.population}</span>
-                          <span className="flex items-center gap-1"><Clock className="h-3 w-3" />ETA: {cluster.eta}</span>
-                          <span className="flex items-center gap-1"><Bell className="h-3 w-3" />{cluster.lastAlert}</span>
-                        </div>
-                      </div>
+                      <div className="absolute -top-1 -right-1 h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-destructive animate-ping" />
                     </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold text-destructive">{cluster.risk}%</p>
-                      <Badge variant="destructive" className="text-xs">{cluster.severity}</Badge>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-destructive text-sm sm:text-base truncate">{cluster.name}</p>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
+                        <span className="flex items-center gap-1"><Users className="h-3 w-3" />{cluster.population}</span>
+                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />ETA: {cluster.eta}</span>
+                        <span className="flex items-center gap-1 truncate"><Bell className="h-3 w-3" />{cluster.lastAlert}</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="mt-3 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-card/50 px-3 py-1 rounded-full border border-destructive/20">
-                        <span className="text-xs text-muted-foreground">Active: {cluster.interventions} interventions</span>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-xl sm:text-2xl font-bold text-destructive">{cluster.risk}%</p>
+                    <Badge variant="destructive" className="text-xs">{cluster.severity}</Badge>
+                  </div>
+                </div>
+                  <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 sm:gap-4">
+                      <div className="bg-card/50 px-2 sm:px-3 py-1 rounded-full border border-destructive/20">
+                        <span className="text-xs text-muted-foreground">Active: {cluster.interventions}</span>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="destructive" className="h-7 px-3 text-xs">
+                    <div className="flex gap-2 w-full sm:w-auto">
+                      <Button size="sm" variant="destructive" className="h-7 px-2 sm:px-3 text-xs flex-1 sm:flex-none">
                         Emergency
                       </Button>
-                      <Button size="sm" variant="outline" className="h-7 px-3 text-xs">
+                      <Button size="sm" variant="outline" className="h-7 px-2 sm:px-3 text-xs flex-1 sm:flex-none">
                         Details
                       </Button>
                     </div>
@@ -1421,10 +1444,23 @@ export default function YellowsenseDashboard() {
 
               {/* Generate Button */}
               <div className="pt-4">
-                <Button className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-xl flex items-center gap-3">
-                  <Brain className="h-6 w-6" />
-                  Generate AI Risk Assessment
-                  <ArrowRight className="h-5 w-5" />
+                <Button 
+                  onClick={generateRiskAssessment}
+                  disabled={isGenerating}
+                  className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-xl flex items-center gap-3"
+                >
+                  {isGenerating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                      Analyzing...
+                    </>
+                  ) : (
+                    <>
+                      <Brain className="h-6 w-6" />
+                      Generate AI Risk Assessment
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -1454,49 +1490,39 @@ export default function YellowsenseDashboard() {
                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     />
                     <path
-                      className="stroke-orange"
+                      className={`stroke-${riskResult?.color || 'orange'}`}
                       strokeWidth="4"
-                      strokeDasharray="67, 100"
+                      strokeDasharray={`${riskResult?.risk || 67}, 100`}
                       strokeLinecap="round"
                       fill="none"
                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-3xl font-bold text-orange">67%</span>
+                    <span className={`text-3xl font-bold text-${riskResult?.color || 'orange'}`}>{riskResult?.risk || 67}%</span>
                     <span className="text-xs text-muted-foreground uppercase tracking-wide">Risk Score</span>
                   </div>
                 </div>
-                <Badge variant="secondary" className="bg-orange/10 text-orange border-orange/20 px-4 py-2 font-semibold">
-                  Medium Risk Level
+                <Badge variant="secondary" className={`bg-${riskResult?.color || 'orange'}/10 text-${riskResult?.color || 'orange'} border-${riskResult?.color || 'orange'}/20 px-4 py-2 font-semibold`}>
+                  {riskResult?.level || "Medium"} Risk Level
                 </Badge>
               </div>
 
               <div className="space-y-4">
-                <div className="p-4 bg-orange/5 rounded-xl border border-orange/20">
-                  <h4 className="font-bold text-orange mb-3 flex items-center gap-2">
+                <div className={`p-4 bg-${riskResult?.color || 'orange'}/5 rounded-xl border border-${riskResult?.color || 'orange'}/20`}>
+                  <h4 className={`font-bold text-${riskResult?.color || 'orange'} mb-3 flex items-center gap-2`}>
                     <Lightbulb className="h-4 w-4" />
                     AI Recommendations
                   </h4>
                   <ul className="space-y-3 text-sm">
-                    <li className="flex items-start gap-3">
-                      <div className="h-5 w-5 rounded-full bg-orange/20 flex items-center justify-center mt-0.5">
-                        <CheckCircle2 className="h-3 w-3 text-orange" />
-                      </div>
-                      <span>Increase meal frequency to 3 times daily</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="h-5 w-5 rounded-full bg-orange/20 flex items-center justify-center mt-0.5">
-                        <CheckCircle2 className="h-3 w-3 text-orange" />
-                      </div>
-                      <span>Add protein-rich foods like dal, eggs, or milk</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="h-5 w-5 rounded-full bg-orange/20 flex items-center justify-center mt-0.5">
-                        <CheckCircle2 className="h-3 w-3 text-orange" />
-                      </div>
-                      <span>Include green vegetables in daily diet</span>
-                    </li>
+                    {(riskResult?.recommendations || ["Increase meal frequency to 3 times daily", "Add protein-rich foods like dal, eggs, or milk", "Include green vegetables in daily diet"]).map((rec, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <div className={`h-5 w-5 rounded-full bg-${riskResult?.color || 'orange'}/20 flex items-center justify-center mt-0.5`}>
+                          <CheckCircle2 className={`h-3 w-3 text-${riskResult?.color || 'orange'}`} />
+                        </div>
+                        <span>{rec}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
