@@ -80,6 +80,109 @@ export default function YellowsenseDashboard() {
     { type: 'ai', content: 'Great start! Roti provides carbohydrates for energy, and dal is an excellent source of plant-based protein. However, your meal is missing some key nutrients.' }
   ])
   const [isSendingMessage, setIsSendingMessage] = useState(false)
+  const [voiceConversation, setVoiceConversation] = useState<Array<{type: string, content: string, timestamp: string}>>([])
+  const [isVoicePlaying, setIsVoicePlaying] = useState(false)
+  const [currentPlayingIndex, setCurrentPlayingIndex] = useState(-1)
+  const [isVoiceRecording, setIsVoiceRecording] = useState(false)
+  const [voiceLanguage, setVoiceLanguage] = useState("English")
+  const playVoiceMessage = (message: string, index: number) => {
+    if ('speechSynthesis' in window) {
+      setIsVoicePlaying(true)
+      setCurrentPlayingIndex(index)
+      const utterance = new SpeechSynthesisUtterance(message)
+      utterance.rate = 1.0
+      utterance.pitch = 1.0
+      utterance.volume = 0.9
+      utterance.onend = () => {
+        setIsVoicePlaying(false)
+        setCurrentPlayingIndex(-1)
+      }
+      speechSynthesis.speak(utterance)
+    }
+  }
+  
+  const startVoiceConversation = () => {
+    setIsVoiceRecording(true)
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    setVoiceConversation([{ type: 'system', content: 'Speak now...', timestamp }])
+    
+    setTimeout(() => {
+      setIsVoiceRecording(false)
+      const userMessage = 'Hello, I want to know about my nutrition'
+      setVoiceConversation(prev => [...prev.filter((m: any) => m.type !== 'system'), 
+        { type: 'user', content: userMessage, timestamp }])
+      
+      setTimeout(() => {
+        const aiResponse = 'Hi! I am Nourish AI, your voice nutrition assistant. I can help you track meals, analyze nutrition, and provide personalized recommendations. What would you like to know about your diet?'
+        const newTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        setVoiceConversation(prev => [...prev, { type: 'ai', content: aiResponse, timestamp: newTimestamp }])
+        
+        // Play voice and wait for it to finish before continuing
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(aiResponse)
+          utterance.rate = 0.8
+          utterance.pitch = 1.0
+          utterance.volume = 0.9
+          utterance.onend = () => {
+            setTimeout(() => continueConversation(1), 2000)
+          }
+          speechSynthesis.speak(utterance)
+        } else {
+          setTimeout(() => continueConversation(1), 5000)
+        }
+      }, 1500)
+    }, 3000)
+  }
+  
+  const continueConversation = (step: number) => {
+    const conversations = [
+      { user: 'I had roti and dal for breakfast. Is that healthy?', ai: 'That\'s a great combination! Roti provides complex carbohydrates for sustained energy, and dal is an excellent source of plant protein. However, to make it more nutritionally complete, I\'d suggest adding some vegetables like spinach or tomatoes, and maybe a glass of milk or some fruit.' },
+      { user: 'What about lunch? I usually eat rice and curry', ai: 'Rice and curry is a staple and nutritious meal! The type of curry matters a lot. If it\'s vegetable curry with legumes, that\'s excellent. Try to include different colored vegetables for various vitamins and minerals. Adding a small portion of yogurt can provide probiotics for gut health.' },
+      { user: 'I often skip dinner. Is that okay?', ai: 'Skipping dinner isn\'t ideal for your metabolism and nutrition. Your body needs consistent fuel throughout the day. For dinner, try something light but nutritious like vegetable soup with whole grain bread, or a small portion of khichdi with vegetables. This helps maintain stable blood sugar levels.' },
+      { user: 'How much water should I drink daily?', ai: 'Great question! You should aim for 8-10 glasses of water daily, which is about 2-3 liters. In hot weather or if you\'re active, you might need more. You can also get hydration from foods like fruits, vegetables, and beverages like buttermilk or coconut water.' },
+      { user: 'Thank you for the advice!', ai: 'You\'re very welcome! Remember, small consistent changes make a big difference in your nutrition. Feel free to ask me anytime about your meals, and I\'ll help you make healthier choices. Take care and eat well!' }
+    ]
+    
+    if (step < conversations.length) {
+      setTimeout(() => {
+        setIsVoiceRecording(true)
+        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        setVoiceConversation(prev => [...prev, { type: 'system', content: 'Speak now...', timestamp }])
+        
+        setTimeout(() => {
+          setIsVoiceRecording(false)
+          const userMessage = conversations[step].user
+          setVoiceConversation(prev => [...prev.filter((m: any) => m.type !== 'system'), 
+            { type: 'user', content: userMessage, timestamp }])
+          
+          setTimeout(() => {
+            const aiResponse = conversations[step].ai
+            const newTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            setVoiceConversation(prev => [...prev, { type: 'ai', content: aiResponse, timestamp: newTimestamp }])
+            
+            // Play voice and wait for it to finish before continuing
+            if ('speechSynthesis' in window) {
+              const utterance = new SpeechSynthesisUtterance(aiResponse)
+              utterance.rate = 0.8
+              utterance.pitch = 1.0
+              utterance.volume = 0.9
+              utterance.onend = () => {
+                if (step < conversations.length - 1) {
+                  setTimeout(() => continueConversation(step + 1), 2000)
+                }
+              }
+              speechSynthesis.speak(utterance)
+            } else {
+              if (step < conversations.length - 1) {
+                setTimeout(() => continueConversation(step + 1), 6000)
+              }
+            }
+          }, 1500)
+        }, 4000)
+      }, 1000)
+    }
+  }
+  
   const sendChatMessage = () => {
     if (!chatMessage.trim()) return
     setIsSendingMessage(true)
@@ -207,6 +310,12 @@ export default function YellowsenseDashboard() {
             label="Interventions"
             active={activeTab === "interventions"}
             onClick={() => setActiveTab("interventions")}
+          />
+          <SidebarNavItem
+            icon={<Mic />}
+            label="Voice Bot"
+            active={activeTab === "voicebot"}
+            onClick={() => setActiveTab("voicebot")}
           />
           <SidebarNavItem
             icon={<Brain />}
@@ -1609,6 +1718,262 @@ export default function YellowsenseDashboard() {
     </div>
   )
 
+  const voiceBotContent = (
+    <div className="space-y-8">
+      <DashboardHeader
+        title="Voice AI Assistant"
+        subtitle="Hands-free nutrition guidance with advanced voice recognition and natural language processing."
+        actions={
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="px-4 py-2 bg-green-500/10 text-green-600 border-green-500/20 rounded-full flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+              Voice Active
+            </Badge>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Mic className="h-4 w-4" />
+              Settings
+            </Button>
+          </div>
+        }
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatsCard
+          title="Voice Recognition"
+          value="98%"
+          subtitle="Accuracy in 13 languages"
+          icon={<Mic />}
+          progress={98}
+          progressColor="primary"
+        />
+        <StatsCard
+          title="Smart Detection"
+          value="AI-Powered"
+          subtitle="Food & nutrition analysis"
+          icon={<Brain />}
+          progress={95}
+        />
+        <StatsCard
+          title="Response Time"
+          value="0.8s"
+          subtitle="Average processing time"
+          icon={<Zap />}
+          progress={90}
+        />
+        <StatsCard
+          title="Conversations"
+          value="2.4K"
+          subtitle="Daily voice interactions"
+          icon={<MessageSquare />}
+          progress={85}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div className="xl:col-span-2">
+          <Card className="shadow-xl border-2 border-green-500/20 h-[600px] flex flex-col">
+            <CardHeader className="border-b bg-gradient-to-r from-green-500/5 via-green-500/10 to-green-500/5 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+                    <Mic className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-bold">Nourish Voice AI</CardTitle>
+                    <CardDescription className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                      <span>Speaking in {voiceLanguage}</span>
+                    </CardDescription>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <select 
+                    value={voiceLanguage} 
+                    onChange={(e) => setVoiceLanguage(e.target.value)}
+                    className="bg-green-500/5 text-green-600 border-green-500/20 px-3 py-1 rounded-full text-sm"
+                  >
+                    {languages.map((lang) => (
+                      <option key={lang} value={lang}>{lang}</option>
+                    ))}
+                  </select>
+                  <Badge variant="outline" className="bg-green-500/5 text-green-600 border-green-500/20 px-3 py-1">
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    Smart Bot
+                  </Badge>
+                </div>
+              </div>
+            </CardHeader>
+            
+            <CardContent className="flex-1 p-0 overflow-hidden">
+              <div className="h-full flex flex-col">
+                <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-green-50/30 to-green-100/20">
+                  {voiceConversation.length === 0 ? (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <div className="h-20 w-20 rounded-full bg-gradient-to-br from-green-500/20 to-green-600/30 flex items-center justify-center mx-auto mb-4">
+                          <Mic className="h-10 w-10 text-green-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-green-700 mb-2">Ready to Chat</h3>
+                        <p className="text-sm text-green-600">Tap the microphone to start your voice conversation</p>
+                      </div>
+                    </div>
+                  ) : (
+                    voiceConversation.map((msg, i) => (
+                      <div key={i} className={`flex gap-4 ${msg.type === 'user' ? 'justify-end' : msg.type === 'system' ? 'justify-center' : ''}`}>
+                        {msg.type === 'ai' && (
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-500/20 to-green-600/30 flex items-center justify-center shrink-0 shadow-md">
+                            <Mic className="h-5 w-5 text-green-600" />
+                          </div>
+                        )}
+                        {msg.type === 'system' ? (
+                          <div className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                            <span className="text-sm font-medium">{msg.content}</span>
+                          </div>
+                        ) : (
+                          <div className={`p-4 rounded-2xl text-sm max-w-[85%] shadow-sm relative group ${
+                            msg.type === 'ai' 
+                              ? 'bg-white border border-green-500/20 rounded-tl-none' 
+                              : 'bg-gradient-to-br from-green-500 to-green-600 text-white rounded-tr-none'
+                          }`}>
+                            {msg.type === 'ai' && (
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <Sparkles className="h-4 w-4 text-green-600" />
+                                  <span className="font-semibold text-green-600">Voice AI</span>
+                                </div>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => playVoiceMessage(msg.content, i)}
+                                  disabled={isVoicePlaying}
+                                >
+                                  {currentPlayingIndex === i && isVoicePlaying ? (
+                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-600"></div>
+                                  ) : (
+                                    <Mic className="h-3 w-3 text-green-600" />
+                                  )}
+                                </Button>
+                              </div>
+                            )}
+                            <p>{msg.content}</p>
+                            <div className="text-xs opacity-70 mt-2">{msg.timestamp}</div>
+                          </div>
+                        )}
+                        {msg.type === 'user' && (
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shrink-0 shadow-md">
+                            <User className="h-5 w-5 text-white" />
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+                
+                <div className="border-t bg-white p-4">
+                  <div className="flex items-center justify-center gap-4">
+                    <Button
+                      size="lg"
+                      className={`h-16 w-16 rounded-full shadow-xl transition-all ${
+                        isVoiceRecording 
+                          ? 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 animate-pulse' 
+                          : 'bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'
+                      }`}
+                      onClick={startVoiceConversation}
+                      disabled={voiceConversation.length > 0}
+                    >
+                      {isVoiceRecording ? <MicOff className="h-8 w-8" /> : <Mic className="h-8 w-8" />}
+                    </Button>
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-green-600">
+                        {voiceConversation.length > 0 ? 'Conversation in progress...' : 'Tap to start voice conversation'}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Supports 13 Indian languages • Faster speech</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-6">
+          <Card className="shadow-xl border-2 border-blue-500/20">
+            <CardHeader className="bg-gradient-to-r from-blue-500/5 to-blue-500/10 border-b border-blue-500/20">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Brain className="h-5 w-5 text-blue-600" />
+                Smart Features
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <Target className="h-6 w-6 text-blue-600" />
+                  <div>
+                    <p className="font-semibold text-blue-700">Smart Food Detection</p>
+                    <p className="text-xs text-blue-600">AI identifies food from voice description</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                  <Zap className="h-6 w-6 text-green-600" />
+                  <div>
+                    <p className="font-semibold text-green-700">Instant Analysis</p>
+                    <p className="text-xs text-green-600">Real-time nutrition breakdown</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                  <Globe className="h-6 w-6 text-purple-600" />
+                  <div>
+                    <p className="font-semibold text-purple-700">Multi-language</p>
+                    <p className="text-xs text-purple-600">13 Indian languages supported</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                  <Lightbulb className="h-6 w-6 text-orange-600" />
+                  <div>
+                    <p className="font-semibold text-orange-700">Smart Suggestions</p>
+                    <p className="text-xs text-orange-600">Personalized recommendations</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2 text-green-700">
+                <Activity className="h-5 w-5" />
+                Voice Analytics
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-green-700">Recognition Accuracy</span>
+                  <span className="font-bold text-green-700">98%</span>
+                </div>
+                <div className="w-full bg-green-200 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full w-[98%] transition-all duration-1000"></div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div className="text-center p-3 bg-white/50 rounded-lg">
+                    <p className="text-2xl font-bold text-green-600">2.4K</p>
+                    <p className="text-xs text-green-600">Daily Chats</p>
+                  </div>
+                  <div className="text-center p-3 bg-white/50 rounded-lg">
+                    <p className="text-2xl font-bold text-green-600">0.8s</p>
+                    <p className="text-xs text-green-600">Avg Response</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  )
+
   const interventionsContent = (
     <div className="space-y-8">
       <DashboardHeader
@@ -1887,6 +2252,10 @@ export default function YellowsenseDashboard() {
       ) : activeTab === "interventions" ? (
         <DashboardLayout sidebar={sidebarContent}>
           {interventionsContent}
+        </DashboardLayout>
+      ) : activeTab === "voicebot" ? (
+        <DashboardLayout sidebar={sidebarContent}>
+          {voiceBotContent}
         </DashboardLayout>
       ) : (
         <DashboardLayout sidebar={sidebarContent}>
