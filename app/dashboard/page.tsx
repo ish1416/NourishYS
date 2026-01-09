@@ -120,7 +120,7 @@ export default function YellowsenseDashboard() {
         // Play voice and wait for it to finish before continuing
         if ('speechSynthesis' in window) {
           const utterance = new SpeechSynthesisUtterance(aiResponse)
-          utterance.rate = 0.8
+          utterance.rate = 1.0
           utterance.pitch = 1.0
           utterance.volume = 0.9
           utterance.onend = () => {
@@ -163,18 +163,30 @@ export default function YellowsenseDashboard() {
             // Play voice and wait for it to finish before continuing
             if ('speechSynthesis' in window) {
               const utterance = new SpeechSynthesisUtterance(aiResponse)
-              utterance.rate = 0.8
+              utterance.rate = 1.0
               utterance.pitch = 1.0
               utterance.volume = 0.9
               utterance.onend = () => {
                 if (step < conversations.length - 1) {
                   setTimeout(() => continueConversation(step + 1), 2000)
+                } else {
+                  // Conversation finished, reset to allow restart
+                  setTimeout(() => {
+                    setVoiceConversation([])
+                    setIsVoiceRecording(false)
+                  }, 3000)
                 }
               }
               speechSynthesis.speak(utterance)
             } else {
               if (step < conversations.length - 1) {
                 setTimeout(() => continueConversation(step + 1), 6000)
+              } else {
+                // Conversation finished, reset to allow restart
+                setTimeout(() => {
+                  setVoiceConversation([])
+                  setIsVoiceRecording(false)
+                }, 6000)
               }
             }
           }, 1500)
@@ -1881,15 +1893,15 @@ export default function YellowsenseDashboard() {
                           : 'bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'
                       }`}
                       onClick={startVoiceConversation}
-                      disabled={voiceConversation.length > 0}
+                      disabled={isVoiceRecording || (voiceConversation.length > 0 && voiceConversation.some(msg => msg.type === 'system'))}
                     >
                       {isVoiceRecording ? <MicOff className="h-8 w-8" /> : <Mic className="h-8 w-8" />}
                     </Button>
                     <div className="text-center">
                       <p className="text-sm font-medium text-green-600">
-                        {voiceConversation.length > 0 ? 'Conversation in progress...' : 'Tap to start voice conversation'}
+                        {voiceConversation.length > 0 && voiceConversation.some(msg => msg.type === 'system') ? 'Conversation in progress...' : 'Tap to start voice conversation'}
                       </p>
-                      <p className="text-xs text-muted-foreground">Supports 13 Indian languages • Faster speech</p>
+                      <p className="text-xs text-muted-foreground">Supports 13 Indian languages • Natural speech speed</p>
                     </div>
                   </div>
                 </div>
