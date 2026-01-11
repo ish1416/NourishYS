@@ -367,10 +367,16 @@ export default function YellowsenseDashboard() {
             onClick={() => setActiveTab("dashboard")}
           />
           <SidebarNavItem
-            icon={<Target />}
-            label="Early Warning"
-            active={activeTab === "warning"}
-            onClick={() => setActiveTab("warning")}
+            icon={<Zap />}
+            label="Interventions"
+            active={activeTab === "interventions"}
+            onClick={() => setActiveTab("interventions")}
+          />
+          <SidebarNavItem
+            icon={<Brain />}
+            label="Beneficiary AI"
+            active={activeTab === "beneficiary"}
+            onClick={() => setActiveTab("beneficiary")}
           />
           <SidebarNavItem
             icon={<Calculator />}
@@ -379,22 +385,16 @@ export default function YellowsenseDashboard() {
             onClick={() => setActiveTab("riskchecker")}
           />
           <SidebarNavItem
-            icon={<Zap />}
-            label="Interventions"
-            active={activeTab === "interventions"}
-            onClick={() => setActiveTab("interventions")}
+            icon={<Target />}
+            label="Early Warning & Voice Nudges"
+            active={activeTab === "warning"}
+            onClick={() => setActiveTab("warning")}
           />
           <SidebarNavItem
             icon={<Mic />}
             label="Voice Bot"
             active={activeTab === "voicebot"}
             onClick={() => setActiveTab("voicebot")}
-          />
-          <SidebarNavItem
-            icon={<Brain />}
-            label="Beneficiary AI"
-            active={activeTab === "beneficiary"}
-            onClick={() => setActiveTab("beneficiary")}
           />
         </div>
       </SidebarContent>
@@ -878,8 +878,8 @@ export default function YellowsenseDashboard() {
   const warningContent = (
     <div className="space-y-8">
       <DashboardHeader
-        title="Early Warning System"
-        subtitle="Proactive alerts and intervention recommendations before nutrition crises develop."
+        title="Early Warning & Voice Nudges"
+        subtitle="Proactive alerts and intervention recommendations before nutrition crises develop, enhanced with intelligent voice nudges."
         actions={
           <div className="flex items-center gap-3">
             <Badge variant="outline" className="px-4 py-2 bg-destructive/10 text-destructive border-destructive/20 rounded-full animate-pulse">
@@ -892,6 +892,71 @@ export default function YellowsenseDashboard() {
           </div>
         }
       />
+
+      {/* Voice Nudges Section */}
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2 text-primary">
+            <Mic className="h-5 w-5" />
+            Voice Nudges System
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">AI-powered voice interventions for behavioral change</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h4 className="font-semibold text-foreground mb-3">What are Voice Nudges?</h4>
+              <p className="text-sm text-muted-foreground mb-4">
+                Voice nudges are personalized audio messages delivered at optimal times to encourage positive nutrition behaviors. 
+                Using behavioral psychology and AI timing, these gentle reminders help beneficiaries make better food choices.
+              </p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <span>Meal timing reminders</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <span>Hydration prompts</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <span>Nutritional education snippets</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <span>Motivational health messages</span>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h4 className="font-semibold text-foreground mb-3">Smart Delivery</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-card/50 rounded-lg border border-border/50">
+                  <Clock className="h-6 w-6 mx-auto mb-2 text-primary" />
+                  <p className="text-sm font-medium text-foreground">Optimal Timing</p>
+                  <p className="text-xs text-muted-foreground">AI-predicted moments</p>
+                </div>
+                <div className="text-center p-3 bg-card/50 rounded-lg border border-border/50">
+                  <Globe className="h-6 w-6 mx-auto mb-2 text-primary" />
+                  <p className="text-sm font-medium text-foreground">Multi-language</p>
+                  <p className="text-xs text-muted-foreground">13 Indian languages</p>
+                </div>
+                <div className="text-center p-3 bg-card/50 rounded-lg border border-border/50">
+                  <Target className="h-6 w-6 mx-auto mb-2 text-primary" />
+                  <p className="text-sm font-medium text-foreground">Personalized</p>
+                  <p className="text-xs text-muted-foreground">Individual profiles</p>
+                </div>
+                <div className="text-center p-3 bg-card/50 rounded-lg border border-border/50">
+                  <Brain className="h-6 w-6 mx-auto mb-2 text-primary" />
+                  <p className="text-sm font-medium text-foreground">Adaptive</p>
+                  <p className="text-xs text-muted-foreground">Learning system</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
@@ -1134,9 +1199,9 @@ export default function YellowsenseDashboard() {
         }
       />
       
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        {/* Chat Interface */}
-        <div className="xl:col-span-2">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+        {/* Voice Chat Interface */}
+        <div className="xl:col-span-3">
           <Card className="shadow-xl border-2 border-primary/20 h-[700px] flex flex-col">
             <CardHeader className="border-b bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 py-4">
               <div className="flex items-center justify-between">
@@ -1810,37 +1875,133 @@ export default function YellowsenseDashboard() {
         }
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatsCard
-          title="Voice Recognition"
-          value="98%"
-          subtitle="Accuracy in 13 languages"
-          icon={<Mic />}
-          progress={98}
-          progressColor="primary"
-        />
-        <StatsCard
-          title="Smart Detection"
-          value="AI-Powered"
-          subtitle="Food & nutrition analysis"
-          icon={<Brain />}
-          progress={95}
-        />
-        <StatsCard
-          title="Response Time"
-          value="0.8s"
-          subtitle="Average processing time"
-          icon={<Zap />}
-          progress={90}
-        />
-        <StatsCard
-          title="Conversations"
-          value="2.4K"
-          subtitle="Daily voice interactions"
-          icon={<MessageSquare />}
-          progress={85}
-        />
-      </div>
+      {/* Smart Mode Detection Feature */}
+      <Card className="shadow-xl border-2 border-primary/20">
+        <CardHeader className="bg-gradient-to-r from-primary/5 to-primary/10 border-b border-primary/20">
+          <CardTitle className="text-xl flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+              <Brain className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-bold flex items-center gap-2">
+                🤖 AI-Powered Conversations
+                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-2 py-1 text-xs">
+                  Gemini AI
+                </Badge>
+              </h3>
+              <p className="text-sm text-muted-foreground font-normal">Smart Mode Detection with Context Awareness</p>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-xl border border-primary/20">
+                <h4 className="font-bold text-primary mb-4 flex items-center gap-2">
+                  <Sparkles className="h-5 w-5" />
+                  Smart Mode Detection
+                </h4>
+                <p className="text-sm text-muted-foreground mb-4">
+                  AI automatically detects conversation type and adapts responses for optimal nutrition guidance:
+                </p>
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex items-center gap-3 p-3 bg-card/50 rounded-lg border border-border/50">
+                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Target className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground text-sm">Guided Nutritional Assessment</p>
+                      <p className="text-xs text-muted-foreground">Structured meal evaluation & scoring</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-card/50 rounded-lg border border-border/50">
+                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <MessageSquare className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground text-sm">Open Conversational Advice</p>
+                      <p className="text-xs text-muted-foreground">Natural dialogue & recommendations</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-card/50 rounded-lg border border-border/50">
+                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Activity className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground text-sm">Health Symptom Tracking</p>
+                      <p className="text-xs text-muted-foreground">Monitor wellness indicators</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-card/50 rounded-lg border border-border/50">
+                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <School className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground text-sm">Educational Content</p>
+                      <p className="text-xs text-muted-foreground">Interactive learning sessions</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-card/50 rounded-xl border border-border/50 text-center">
+                  <Zap className="h-8 w-8 mx-auto mb-3 text-primary" />
+                  <p className="font-bold text-foreground">Gemini AI</p>
+                  <p className="text-xs text-muted-foreground">Smart context-aware responses</p>
+                </div>
+                <div className="p-4 bg-card/50 rounded-xl border border-border/50 text-center">
+                  <Brain className="h-8 w-8 mx-auto mb-3 text-primary" />
+                  <p className="font-bold text-foreground">Full Context</p>
+                  <p className="text-xs text-muted-foreground">Remembers conversation history</p>
+                </div>
+                <div className="p-4 bg-card/50 rounded-xl border border-border/50 text-center">
+                  <Globe className="h-8 w-8 mx-auto mb-3 text-primary" />
+                  <p className="font-bold text-foreground">Multi-language</p>
+                  <p className="text-xs text-muted-foreground">13 Indian languages</p>
+                </div>
+                <div className="p-4 bg-card/50 rounded-xl border border-border/50 text-center">
+                  <Activity className="h-8 w-8 mx-auto mb-3 text-primary" />
+                  <p className="font-bold text-foreground">Continuous</p>
+                  <p className="text-xs text-muted-foreground">Never resets dialogue</p>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-xl border border-primary/20">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+                    <Lightbulb className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-primary">Intelligent Features</h4>
+                    <p className="text-xs text-muted-foreground">Advanced AI capabilities</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    <span>Smart food detection from voice</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    <span>Real-time nutrition analysis</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    <span>Personalized recommendations</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    <span>Behavioral pattern learning</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div className="xl:col-span-2">
@@ -1977,51 +2138,11 @@ export default function YellowsenseDashboard() {
           </Card>
         </div>
 
+        {/* Analytics Panel */}
         <div className="space-y-6">
-          <Card className="shadow-xl border-2 border-blue-500/20">
-            <CardHeader className="bg-gradient-to-r from-blue-500/5 to-blue-500/10 border-b border-blue-500/20">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Brain className="h-5 w-5 text-blue-600" />
-                Smart Features
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-4">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <Target className="h-6 w-6 text-blue-600" />
-                  <div>
-                    <p className="font-semibold text-blue-700">Smart Food Detection</p>
-                    <p className="text-xs text-blue-600">AI identifies food from voice description</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                  <Zap className="h-6 w-6 text-green-600" />
-                  <div>
-                    <p className="font-semibold text-green-700">Instant Analysis</p>
-                    <p className="text-xs text-green-600">Real-time nutrition breakdown</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
-                  <Globe className="h-6 w-6 text-purple-600" />
-                  <div>
-                    <p className="font-semibold text-purple-700">Multi-language</p>
-                    <p className="text-xs text-purple-600">13 Indian languages supported</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
-                  <Lightbulb className="h-6 w-6 text-orange-600" />
-                  <div>
-                    <p className="font-semibold text-orange-700">Smart Suggestions</p>
-                    <p className="text-xs text-orange-600">Personalized recommendations</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200">
+          <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20">
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2 text-green-700">
+              <CardTitle className="text-lg flex items-center gap-2 text-primary">
                 <Activity className="h-5 w-5" />
                 Voice Analytics
               </CardTitle>
@@ -2029,20 +2150,20 @@ export default function YellowsenseDashboard() {
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-green-700">Recognition Accuracy</span>
-                  <span className="font-bold text-green-700">98%</span>
+                  <span className="text-sm text-muted-foreground">Recognition Accuracy</span>
+                  <span className="font-bold text-primary">98%</span>
                 </div>
-                <div className="w-full bg-green-200 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full w-[98%] transition-all duration-1000"></div>
+                <div className="w-full bg-muted rounded-full h-2">
+                  <div className="bg-gradient-to-r from-primary to-primary/80 h-2 rounded-full w-[98%] transition-all duration-1000"></div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
-                  <div className="text-center p-3 bg-white/50 rounded-lg">
-                    <p className="text-2xl font-bold text-green-600">2.4K</p>
-                    <p className="text-xs text-green-600">Daily Chats</p>
+                  <div className="text-center p-3 bg-card/50 rounded-lg border border-border/50">
+                    <p className="text-2xl font-bold text-primary">2.4K</p>
+                    <p className="text-xs text-muted-foreground">Daily Chats</p>
                   </div>
-                  <div className="text-center p-3 bg-white/50 rounded-lg">
-                    <p className="text-2xl font-bold text-green-600">0.8s</p>
-                    <p className="text-xs text-green-600">Avg Response</p>
+                  <div className="text-center p-3 bg-card/50 rounded-lg border border-border/50">
+                    <p className="text-2xl font-bold text-primary">0.8s</p>
+                    <p className="text-xs text-muted-foreground">Avg Response</p>
                   </div>
                 </div>
               </div>
