@@ -969,51 +969,51 @@ export default function YellowsenseDashboard() {
           </CardHeader>
           <CardContent className="p-6 space-y-4">
             <div className="space-y-4">
-              <div className="p-4 bg-destructive/5 rounded-lg border border-destructive/20">
-                <h4 className="font-semibold text-destructive mb-3 flex items-center gap-2">
-                  <User className="h-4 w-4" />
+              <div className="p-4 bg-card/50 rounded-lg border border-border/50">
+                <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <User className="h-4 w-4 text-primary" />
                   Physical Warning Signs
                 </h4>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-destructive" />
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                     <span>Rapid weight loss or failure to gain weight</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-destructive" />
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                     <span>Visible ribs, spine, or hip bones</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-destructive" />
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                     <span>Swelling in legs, feet, or face</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-destructive" />
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                     <span>Hair changes (thinning, color loss, brittle)</span>
                   </div>
                 </div>
               </div>
               
-              <div className="p-4 bg-orange/5 rounded-lg border border-orange/20">
-                <h4 className="font-semibold text-orange mb-3 flex items-center gap-2">
-                  <Activity className="h-4 w-4" />
+              <div className="p-4 bg-card/50 rounded-lg border border-border/50">
+                <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <Activity className="h-4 w-4 text-primary" />
                   Behavioral Warning Signs
                 </h4>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-orange" />
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                     <span>Decreased energy and activity levels</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-orange" />
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                     <span>Irritability or mood changes</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-orange" />
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                     <span>Difficulty concentrating or learning</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-orange" />
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                     <span>Frequent infections or slow healing</span>
                   </div>
                 </div>
@@ -1032,9 +1032,9 @@ export default function YellowsenseDashboard() {
           </CardHeader>
           <CardContent className="p-6 space-y-4">
             <div className="space-y-4">
-              <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
-                <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
-                  <Utensils className="h-4 w-4" />
+              <div className="p-4 bg-card/50 rounded-lg border border-border/50">
+                <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <Utensils className="h-4 w-4 text-primary" />
                   Nutritional Interventions
                 </h4>
                 <div className="space-y-2">
@@ -1057,26 +1057,26 @@ export default function YellowsenseDashboard() {
                 </div>
               </div>
               
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <h4 className="font-semibold text-green-700 mb-3 flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
+              <div className="p-4 bg-card/50 rounded-lg border border-border/50">
+                <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
                   Monitoring Schedule
                 </h4>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-green-600">
-                    <Calendar className="h-4 w-4" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4 text-primary" />
                     <span>Weekly weight monitoring</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-green-600">
-                    <Calendar className="h-4 w-4" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4 text-primary" />
                     <span>Monthly growth assessment</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-green-600">
-                    <Calendar className="h-4 w-4" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4 text-primary" />
                     <span>Quarterly health check-ups</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-green-600">
-                    <Calendar className="h-4 w-4" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4 text-primary" />
                     <span>Immediate medical referral if critical</span>
                   </div>
                 </div>
