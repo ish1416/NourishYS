@@ -85,6 +85,8 @@ export default function YellowsenseDashboard() {
   const [currentPlayingIndex, setCurrentPlayingIndex] = useState(-1)
   const [isVoiceRecording, setIsVoiceRecording] = useState(false)
   const [voiceLanguage, setVoiceLanguage] = useState("English")
+  const [isConversationActive, setIsConversationActive] = useState(false)
+  const [conversationTimeouts, setConversationTimeouts] = useState<NodeJS.Timeout[]>([])
   const playVoiceMessage = (message: string, index: number) => {
     if ('speechSynthesis' in window) {
       setIsVoicePlaying(true)
@@ -103,16 +105,18 @@ export default function YellowsenseDashboard() {
   
   const startVoiceConversation = () => {
     setIsVoiceRecording(true)
+    setIsConversationActive(true)
+    setConversationTimeouts([])
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     setVoiceConversation([{ type: 'system', content: 'Speak now...', timestamp }])
     
-    setTimeout(() => {
+    const timeout1 = setTimeout(() => {
       setIsVoiceRecording(false)
       const userMessage = 'Hello, I want to know about my nutrition'
       setVoiceConversation(prev => [...prev.filter((m: any) => m.type !== 'system'), 
         { type: 'user', content: userMessage, timestamp }])
       
-      setTimeout(() => {
+      const timeout2 = setTimeout(() => {
         const aiResponse = 'Hi! I am Nourish AI, your voice nutrition assistant. I can help you track meals, analyze nutrition, and provide personalized recommendations. What would you like to know about your diet?'
         const newTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         setVoiceConversation(prev => [...prev, { type: 'ai', content: aiResponse, timestamp: newTimestamp }])
@@ -124,14 +128,28 @@ export default function YellowsenseDashboard() {
           utterance.pitch = 1.0
           utterance.volume = 0.9
           utterance.onend = () => {
-            setTimeout(() => continueConversation(1), 2000)
+            const timeout3 = setTimeout(() => {
+              setIsConversationActive(active => {
+                if (active) continueConversation(1)
+                return active
+              })
+            }, 2000)
+            setConversationTimeouts(prev => [...prev, timeout3])
           }
           speechSynthesis.speak(utterance)
         } else {
-          setTimeout(() => continueConversation(1), 5000)
+          const timeout3 = setTimeout(() => {
+            setIsConversationActive(active => {
+              if (active) continueConversation(1)
+              return active
+            })
+          }, 5000)
+          setConversationTimeouts(prev => [...prev, timeout3])
         }
       }, 1500)
+      setConversationTimeouts(prev => [...prev, timeout2])
     }, 3000)
+    setConversationTimeouts([timeout1])
   }
   
   const continueConversation = (step: number) => {
@@ -144,55 +162,98 @@ export default function YellowsenseDashboard() {
     ]
     
     if (step < conversations.length) {
-      setTimeout(() => {
-        setIsVoiceRecording(true)
-        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        setVoiceConversation(prev => [...prev, { type: 'system', content: 'Speak now...', timestamp }])
-        
-        setTimeout(() => {
-          setIsVoiceRecording(false)
-          const userMessage = conversations[step].user
-          setVoiceConversation(prev => [...prev.filter((m: any) => m.type !== 'system'), 
-            { type: 'user', content: userMessage, timestamp }])
+      const timeout1 = setTimeout(() => {
+        setIsConversationActive(active => {
+          if (!active) return active
+          setIsVoiceRecording(true)
+          const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          setVoiceConversation(prev => [...prev, { type: 'system', content: 'Speak now...', timestamp }])
           
-          setTimeout(() => {
-            const aiResponse = conversations[step].ai
-            const newTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            setVoiceConversation(prev => [...prev, { type: 'ai', content: aiResponse, timestamp: newTimestamp }])
-            
-            // Play voice and wait for it to finish before continuing
-            if ('speechSynthesis' in window) {
-              const utterance = new SpeechSynthesisUtterance(aiResponse)
-              utterance.rate = 1.0
-              utterance.pitch = 1.0
-              utterance.volume = 0.9
-              utterance.onend = () => {
-                if (step < conversations.length - 1) {
-                  setTimeout(() => continueConversation(step + 1), 2000)
-                } else {
-                  // Conversation finished, reset to allow restart
-                  setTimeout(() => {
-                    setVoiceConversation([])
-                    setIsVoiceRecording(false)
-                  }, 3000)
-                }
-              }
-              speechSynthesis.speak(utterance)
-            } else {
-              if (step < conversations.length - 1) {
-                setTimeout(() => continueConversation(step + 1), 6000)
-              } else {
-                // Conversation finished, reset to allow restart
-                setTimeout(() => {
-                  setVoiceConversation([])
-                  setIsVoiceRecording(false)
-                }, 6000)
-              }
-            }
-          }, 1500)
-        }, 4000)
+          const timeout2 = setTimeout(() => {
+            setIsConversationActive(active => {
+              if (!active) return active
+              setIsVoiceRecording(false)
+              const userMessage = conversations[step].user
+              setVoiceConversation(prev => [...prev.filter((m: any) => m.type !== 'system'), 
+                { type: 'user', content: userMessage, timestamp }])
+              
+              const timeout3 = setTimeout(() => {
+                setIsConversationActive(active => {
+                  if (!active) return active
+                  const aiResponse = conversations[step].ai
+                  const newTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                  setVoiceConversation(prev => [...prev, { type: 'ai', content: aiResponse, timestamp: newTimestamp }])
+                  
+                  // Play voice and wait for it to finish before continuing
+                  if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(aiResponse)
+                    utterance.rate = 1.0
+                    utterance.pitch = 1.0
+                    utterance.volume = 0.9
+                    utterance.onend = () => {
+                      setIsConversationActive(active => {
+                        if (!active) return active
+                        if (step < conversations.length - 1) {
+                          const timeout4 = setTimeout(() => continueConversation(step + 1), 2000)
+                          setConversationTimeouts(prev => [...prev, timeout4])
+                        } else {
+                          // Conversation finished, reset to allow restart
+                          const timeout4 = setTimeout(() => {
+                            setVoiceConversation([])
+                            setIsVoiceRecording(false)
+                            setIsConversationActive(false)
+                            setConversationTimeouts([])
+                          }, 3000)
+                          setConversationTimeouts(prev => [...prev, timeout4])
+                        }
+                        return active
+                      })
+                    }
+                    speechSynthesis.speak(utterance)
+                  } else {
+                    if (step < conversations.length - 1) {
+                      const timeout4 = setTimeout(() => continueConversation(step + 1), 6000)
+                      setConversationTimeouts(prev => [...prev, timeout4])
+                    } else {
+                      // Conversation finished, reset to allow restart
+                      const timeout4 = setTimeout(() => {
+                        setVoiceConversation([])
+                        setIsVoiceRecording(false)
+                        setIsConversationActive(false)
+                        setConversationTimeouts([])
+                      }, 6000)
+                      setConversationTimeouts(prev => [...prev, timeout4])
+                    }
+                  }
+                  return active
+                })
+              }, 1500)
+              setConversationTimeouts(prev => [...prev, timeout3])
+              return active
+            })
+          }, 4000)
+          setConversationTimeouts(prev => [...prev, timeout2])
+          return active
+        })
       }, 1000)
+      setConversationTimeouts(prev => [...prev, timeout1])
     }
+  }
+  
+  const stopVoiceConversation = () => {
+    // Cancel all timeouts
+    conversationTimeouts.forEach(timeout => clearTimeout(timeout))
+    setConversationTimeouts([])
+    
+    // Stop speech synthesis
+    if ('speechSynthesis' in window) {
+      speechSynthesis.cancel()
+    }
+    
+    // Reset all states
+    setVoiceConversation([])
+    setIsVoiceRecording(false)
+    setIsConversationActive(false)
   }
   
   const sendChatMessage = () => {
@@ -1885,21 +1946,27 @@ export default function YellowsenseDashboard() {
                 
                 <div className="border-t bg-white p-4">
                   <div className="flex items-center justify-center gap-4">
-                    <Button
-                      size="lg"
-                      className={`h-16 w-16 rounded-full shadow-xl transition-all ${
-                        isVoiceRecording 
-                          ? 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 animate-pulse' 
-                          : 'bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'
-                      }`}
-                      onClick={startVoiceConversation}
-                      disabled={isVoiceRecording || (voiceConversation.length > 0 && voiceConversation.some(msg => msg.type === 'system'))}
-                    >
-                      {isVoiceRecording ? <MicOff className="h-8 w-8" /> : <Mic className="h-8 w-8" />}
-                    </Button>
+                    {!isConversationActive ? (
+                      <Button
+                        size="lg"
+                        className="h-16 w-16 rounded-full shadow-xl transition-all bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+                        onClick={startVoiceConversation}
+                      >
+                        <Mic className="h-8 w-8" />
+                      </Button>
+                    ) : (
+                      <Button
+                        size="lg"
+                        variant="destructive"
+                        className="h-16 w-16 rounded-full shadow-xl transition-all bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
+                        onClick={stopVoiceConversation}
+                      >
+                        <X className="h-8 w-8" />
+                      </Button>
+                    )}
                     <div className="text-center">
                       <p className="text-sm font-medium text-green-600">
-                        {voiceConversation.length > 0 && voiceConversation.some(msg => msg.type === 'system') ? 'Conversation in progress...' : 'Tap to start voice conversation'}
+                        {isConversationActive ? 'Conversation in progress... Click X to stop' : 'Tap to start voice conversation'}
                       </p>
                       <p className="text-xs text-muted-foreground">Supports 13 Indian languages • Natural speech speed</p>
                     </div>
