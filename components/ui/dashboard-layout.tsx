@@ -12,23 +12,21 @@ interface DashboardLayoutProps {
 
 function DashboardLayout({ sidebar, children, rightPanel, className }: DashboardLayoutProps) {
   return (
-    <div className={cn('flex min-h-screen bg-gradient-to-br from-background-solid to-background-solid', className)}>
-      {/* Sidebar */}
-      <div className="w-72 flex-shrink-0">
-        {sidebar}
-      </div>
+    <div className={cn('h-screen bg-gradient-to-br from-background-solid to-background-solid overflow-hidden', className)}>
+      {/* Fixed Sidebar */}
+      {sidebar}
       
-      {/* Main Content */}
-      <div className="flex-1 flex">
-        <main className={cn('flex-1 p-8', rightPanel ? 'pr-4' : 'pr-8')}>
-          <div className="max-w-none">
+      {/* Main Content with left margin for fixed sidebar */}
+      <div className="ml-72 h-full flex">
+        <main className={cn('flex-1 overflow-y-auto', rightPanel ? 'pr-4' : 'pr-8')}>
+          <div className="p-8">
             {children}
           </div>
         </main>
         
         {/* Right Panel */}
         {rightPanel && (
-          <aside className="w-80 flex-shrink-0 p-8 pl-4">
+          <aside className="w-80 flex-shrink-0 p-8 pl-4 overflow-y-auto">
             {rightPanel}
           </aside>
         )}

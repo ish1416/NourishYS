@@ -19,12 +19,14 @@ function Sidebar({ className, children, ...props }: SidebarProps) {
   return (
     <div
       className={cn(
-        'fixed left-0 top-0 z-40 h-screen w-72 bg-gradient-to-b from-sidebar to-sidebar/95 border-r border-sidebar-border/50 backdrop-blur-sm shadow-xl shadow-black/5',
+        'fixed left-0 top-0 z-40 h-screen w-72 bg-gradient-to-b from-sidebar to-sidebar/95 border-r border-sidebar-border/50 backdrop-blur-sm shadow-xl shadow-black/5 overflow-hidden',
         className
       )}
       {...props}
     >
-      {children}
+      <div className="flex flex-col h-full">
+        {children}
+      </div>
     </div>
   )
 }
@@ -46,7 +48,7 @@ function SidebarHeader({ className, children, ...props }: React.ComponentProps<'
 function SidebarContent({ className, children, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      className={cn('flex-1 overflow-y-auto px-4 py-6', className)}
+      className={cn('flex-1 px-4 py-6', className)}
       {...props}
     >
       {children}

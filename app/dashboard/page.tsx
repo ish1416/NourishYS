@@ -22,6 +22,17 @@ import {
   Target,
   Zap,
   Brain,
+  Mic,
+  MicOff,
+  ChevronDown,
+  Globe,
+  Calculator,
+  Calendar,
+  School,
+  Apple,
+  Bell,
+  X,
+  MapPin
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -37,11 +48,54 @@ export default function YellowsenseDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard")
   const [chatMessage, setChatMessage] = useState("")
   const [isLoading, setIsLoading] = useState(true)
+  const [isRecording, setIsRecording] = useState(false)
+  const [selectedLanguage, setSelectedLanguage] = useState("English")
+  const [notifications, setNotifications] = useState([
+    { id: 1, type: "critical", message: "High risk alert: Rajasthan cluster needs immediate intervention", time: "2 min ago" },
+    { id: 2, type: "warning", message: "Medium risk detected in Bihar - monitoring required", time: "5 min ago" }
+  ])
+  const [expandedBeneficiary, setExpandedBeneficiary] = useState<string | null>(null)
+  const [expandedState, setExpandedState] = useState(null)
+  const [expandedCluster, setExpandedCluster] = useState(null)
+  const [expandedRoute, setExpandedRoute] = useState(null)
+  const [riskFormData, setRiskFormData] = useState({
+    age: 25,
+    mealFrequency: 2,
+    proteinIntake: "medium",
+    schoolAttendance: true
+  })
   const router = useRouter()
 
   useEffect(() => {
     setTimeout(() => setIsLoading(false), 500)
   }, [])
+
+  const languages = [
+    "English", "Hindi", "Bengali", "Tamil", "Telugu", "Marathi", 
+    "Gujarati", "Kannada", "Malayalam", "Punjabi", "Odia", "Assamese", "Urdu"
+  ]
+
+  const indianStates = [
+    { name: "Rajasthan", risk: 89, population: "280K", status: "critical" },
+    { name: "Bihar", risk: 76, population: "320K", status: "high" },
+    { name: "Uttar Pradesh", risk: 71, population: "450K", status: "high" },
+    { name: "Madhya Pradesh", risk: 68, population: "210K", status: "medium" },
+    { name: "Odisha", risk: 64, population: "180K", status: "medium" },
+    { name: "Jharkhand", risk: 61, population: "150K", status: "medium" },
+    { name: "West Bengal", risk: 45, population: "380K", status: "low" },
+    { name: "Tamil Nadu", risk: 38, population: "290K", status: "low" },
+    { name: "Kerala", risk: 32, population: "120K", status: "low" },
+    { name: "Punjab", risk: 28, population: "95K", status: "low" }
+  ]
+
+  const indianFoods = [
+    { name: "Roti", icon: "🫓", category: "Grains" },
+    { name: "Dal", icon: "🍲", category: "Protein" },
+    { name: "Rice", icon: "🍚", category: "Grains" },
+    { name: "Sabzi", icon: "🥬", category: "Vegetables" },
+    { name: "Curd", icon: "🥛", category: "Dairy" },
+    { name: "Chapati", icon: "🫓", category: "Grains" }
+  ]
 
   const riskData = [
     { name: 'Alpha-9', risk: 82, color: '#E94A7F' },
@@ -68,12 +122,12 @@ export default function YellowsenseDashboard() {
   const sidebarContent = (
     <Sidebar>
       <SidebarHeader>
-        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
-          <Shield className="h-6 w-6 text-white" />
+        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] flex items-center justify-center shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
+          <Apple className="h-7 w-7 text-white drop-shadow-sm" />
         </div>
         <div>
-          <h2 className="font-bold text-lg text-sidebar-foreground">Yellowsense</h2>
-          <p className="text-xs text-sidebar-foreground/60">AI Nourishment Intelligence</p>
+          <h2 className="font-bold text-xl bg-gradient-to-r from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] bg-clip-text text-transparent">Nourishment AI</h2>
+          <p className="text-xs text-sidebar-foreground/60 font-medium">Intelligence System</p>
         </div>
       </SidebarHeader>
       
@@ -88,12 +142,20 @@ export default function YellowsenseDashboard() {
           <SidebarNavItem
             icon={<Target />}
             label="Early Warning"
-            active={false}
+            active={activeTab === "warning"}
+            onClick={() => setActiveTab("warning")}
+          />
+          <SidebarNavItem
+            icon={<Calculator />}
+            label="Risk Checker"
+            active={activeTab === "riskchecker"}
+            onClick={() => setActiveTab("riskchecker")}
           />
           <SidebarNavItem
             icon={<Zap />}
             label="Interventions"
-            active={false}
+            active={activeTab === "interventions"}
+            onClick={() => setActiveTab("interventions")}
           />
           <SidebarNavItem
             icon={<Brain />}
@@ -139,23 +201,19 @@ export default function YellowsenseDashboard() {
         }
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <StatsCard
-          title="Global Risk Index"
-          value="64.2"
-          icon={<Activity />}
-          trend={{
-            value: "+2.1%",
-            direction: "up",
-            icon: <TrendingUp className="h-3 w-3" />
-          }}
-          progress={64}
+          title="AI Accuracy"
+          value="91%"
+          subtitle="Prediction accuracy (NFHS5 data)"
+          icon={<Brain />}
+          progress={91}
           progressColor="primary"
         />
         <StatsCard
-          title="Pop. Monitored"
-          value="1.2M"
-          subtitle="Across 14 priority clusters"
+          title="Beneficiaries"
+          value="5,000"
+          subtitle="Across 20 Indian states"
           icon={<Users />}
           progress={88}
         />
@@ -166,6 +224,13 @@ export default function YellowsenseDashboard() {
           icon={<AlertTriangle />}
           progress={33}
           progressColor="destructive"
+        />
+        <StatsCard
+          title="Prediction Window"
+          value="14-30"
+          subtitle="Days ahead forecasting"
+          icon={<Clock />}
+          progress={75}
         />
         <StatsCard
           title="AI Interventions"
@@ -278,8 +343,8 @@ export default function YellowsenseDashboard() {
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-xl">Geographic Risk Mapping</CardTitle>
-              <CardDescription>Real-time nutrition risk clusters across Sub-Saharan Africa</CardDescription>
+              <CardTitle className="text-xl">India Risk Mapping</CardTitle>
+              <CardDescription>Real-time nutrition risk clusters across 20 Indian states</CardDescription>
             </div>
             <Button variant="outline" size="sm" className="gap-2">
               <MapIcon className="h-4 w-4" /> Full Screen
@@ -298,22 +363,22 @@ export default function YellowsenseDashboard() {
             </div>
             <div className="z-10 text-center">
               <div className="bg-card/95 backdrop-blur-md p-4 rounded-xl border border-border/50 shadow-lg">
-                <h3 className="font-semibold text-foreground mb-3">Active Monitoring</h3>
+                <h3 className="font-semibold text-foreground mb-3">Active Monitoring - India</h3>
                 <div className="grid grid-cols-3 gap-4 text-sm">
                   <div className="text-center">
                     <div className="w-3 h-3 bg-destructive rounded-full mx-auto mb-1"></div>
                     <span className="text-destructive font-medium block">High Risk</span>
-                    <p className="text-xs text-muted-foreground">4 Clusters</p>
+                    <p className="text-xs text-muted-foreground">6 States</p>
                   </div>
                   <div className="text-center">
                     <div className="w-3 h-3 bg-orange rounded-full mx-auto mb-1"></div>
                     <span className="text-orange font-medium block">Medium Risk</span>
-                    <p className="text-xs text-muted-foreground">6 Clusters</p>
+                    <p className="text-xs text-muted-foreground">8 States</p>
                   </div>
                   <div className="text-center">
                     <div className="w-3 h-3 bg-primary rounded-full mx-auto mb-1"></div>
                     <span className="text-primary font-medium block">Low Risk</span>
-                    <p className="text-xs text-muted-foreground">4 Clusters</p>
+                    <p className="text-xs text-muted-foreground">6 States</p>
                   </div>
                 </div>
               </div>
@@ -321,6 +386,329 @@ export default function YellowsenseDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="border-l-4 border-l-destructive shadow-lg">
+        <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-destructive/5 to-destructive/10">
+          <div>
+            <CardTitle className="text-xl text-destructive flex items-center gap-2">
+              <AlertTriangle className="h-6 w-6" />
+              High Risk Beneficiaries
+            </CardTitle>
+            <CardDescription>Individuals requiring immediate nutrition intervention</CardDescription>
+          </div>
+          <div className="flex items-center gap-3">
+            <Badge variant="destructive" className="px-3 py-1 font-semibold">
+              23 Critical
+            </Badge>
+            <Button variant="outline" size="sm" className="border-destructive/30 text-destructive hover:bg-destructive/10">
+              Export List
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="space-y-0">
+            {[
+              { 
+                id: 'BEN-001', 
+                name: 'Amara Kone', 
+                age: 34, 
+                location: 'Alpha-9', 
+                risk: 94, 
+                lastMeal: '18 hours ago', 
+                deficiency: 'Protein, Iron',
+                bmi: 16.2,
+                status: 'Critical',
+                contact: '+91 98765 43210',
+                intervention: 'Emergency food packet dispatched'
+              },
+              { 
+                id: 'BEN-002', 
+                name: 'Ibrahim Diallo', 
+                age: 28, 
+                location: 'Delta-7', 
+                risk: 89, 
+                lastMeal: '12 hours ago', 
+                deficiency: 'Vitamin A, Zinc',
+                bmi: 17.1,
+                status: 'High Risk',
+                contact: '+91 98765 43211',
+                intervention: 'Nutrition counseling scheduled'
+              },
+              { 
+                id: 'BEN-003', 
+                name: 'Fatou Traore', 
+                age: 42, 
+                location: 'Echo-5', 
+                risk: 87, 
+                lastMeal: '24 hours ago', 
+                deficiency: 'Calories, B12',
+                bmi: 15.8,
+                status: 'Critical',
+                contact: '+91 98765 43212',
+                intervention: 'Medical referral pending'
+              },
+              { 
+                id: 'BEN-004', 
+                name: 'Moussa Camara', 
+                age: 19, 
+                location: 'Alpha-9', 
+                risk: 85, 
+                lastMeal: '15 hours ago', 
+                deficiency: 'Iron, Folate',
+                bmi: 16.9,
+                status: 'High Risk',
+                contact: '+91 98765 43213',
+                intervention: 'Follow-up visit due'
+              }
+            ].map((beneficiary, index) => {
+              const isExpanded = expandedBeneficiary === beneficiary.id
+              return (
+              <div key={beneficiary.id} className={`border-b border-destructive/10 hover:bg-destructive/5 cursor-pointer transition-all duration-200 ${index === 0 ? 'bg-destructive/5' : ''}`}
+                   onClick={() => setExpandedBeneficiary(isExpanded ? null : beneficiary.id)}>
+                <div className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <div className={`h-10 w-10 rounded-full flex items-center justify-center shadow-md ${
+                          beneficiary.status === 'Critical' ? 'bg-destructive/20 border-2 border-destructive/30' : 'bg-orange/20 border-2 border-orange/30'
+                        }`}>
+                          <User className={`h-5 w-5 ${
+                            beneficiary.status === 'Critical' ? 'text-destructive' : 'text-orange'
+                          }`} />
+                        </div>
+                        <div className={`absolute -top-1 -right-1 h-3 w-3 rounded-full border-2 border-white ${
+                          beneficiary.status === 'Critical' ? 'bg-destructive animate-pulse' : 'bg-orange'
+                        }`} />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground">{beneficiary.name}</h4>
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                          <span>{beneficiary.age}y</span>
+                          <span>{beneficiary.location}</span>
+                          <span>{beneficiary.lastMeal}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <div className={`text-2xl font-bold ${
+                          beneficiary.status === 'Critical' ? 'text-destructive' : 'text-orange'
+                        }`}>
+                          {beneficiary.risk}%
+                        </div>
+                        <Badge variant={beneficiary.status === 'Critical' ? 'destructive' : 'secondary'} className="text-xs">
+                          {beneficiary.status}
+                        </Badge>
+                      </div>
+                      <ChevronRight className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${
+                        isExpanded ? 'rotate-90' : ''
+                      }`} />
+                    </div>
+                  </div>
+                </div>
+                
+                {isExpanded && (
+                  <div className="px-4 pb-4 space-y-4 border-t border-destructive/10 bg-destructive/5">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                      <div className="bg-card/50 p-3 rounded-lg border border-border/50">
+                        <p className="text-xs text-muted-foreground mb-1">Deficiencies</p>
+                        <p className="font-medium text-sm">{beneficiary.deficiency}</p>
+                      </div>
+                      <div className="bg-card/50 p-3 rounded-lg border border-border/50">
+                        <p className="text-xs text-muted-foreground mb-1">BMI Status</p>
+                        <p className={`font-medium text-sm ${
+                          beneficiary.bmi < 16 ? 'text-destructive' : beneficiary.bmi < 18.5 ? 'text-orange' : 'text-primary'
+                        }`}>
+                          {beneficiary.bmi} {beneficiary.bmi < 16 ? '(Severe)' : beneficiary.bmi < 18.5 ? '(Underweight)' : '(Normal)'}
+                        </p>
+                      </div>
+                      <div className="bg-card/50 p-3 rounded-lg border border-border/50">
+                        <p className="text-xs text-muted-foreground mb-1">Contact</p>
+                        <p className="font-medium text-sm">{beneficiary.contact}</p>
+                      </div>
+                    </div>
+                    
+                    <div className={`p-3 rounded-lg border-l-4 ${
+                      beneficiary.status === 'Critical' 
+                        ? 'bg-destructive/5 border-l-destructive' 
+                        : 'bg-orange/5 border-l-orange'
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Current Intervention:</p>
+                          <p className="text-xs text-muted-foreground">{beneficiary.intervention}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" className="h-8 px-3 text-xs">
+                            Call
+                          </Button>
+                          <Button size="sm" className="h-8 px-3 text-xs">
+                            Update
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )})}
+          </div>
+          <div className="p-6 bg-gradient-to-r from-destructive/5 to-destructive/10 border-t border-destructive/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+                  <span>4 Critical cases need immediate attention</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="h-2 w-2 rounded-full bg-orange" />
+                  <span>19 High risk cases monitored</span>
+                </div>
+              </div>
+              <Button variant="destructive" className="shadow-md">
+                View All High Risk Beneficiaries (23)
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-primary" />
+            State-wise Risk Analytics
+          </CardTitle>
+          <CardDescription>Nutrition risk assessment across 20 Indian states</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {indianStates.slice(0, 6).map((state, i) => (
+              <div
+                key={i}
+                className={`p-4 rounded-lg border cursor-pointer hover:shadow-md transition-all ${
+                  state.status === 'critical' ? 'bg-destructive/5 border-destructive/20' :
+                  state.status === 'high' ? 'bg-destructive/5 border-destructive/20' :
+                  state.status === 'medium' ? 'bg-orange/5 border-orange/20' :
+                  'bg-primary/5 border-primary/20'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-semibold">{state.name}</h4>
+                  <Badge
+                    variant="outline"
+                    className={`text-xs ${
+                      state.status === 'critical' || state.status === 'high' ? 'border-destructive/20 text-destructive' :
+                      state.status === 'medium' ? 'border-orange/20 text-orange' :
+                      'border-primary/20 text-primary'
+                    }`}
+                  >
+                    {state.risk}%
+                  </Badge>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Population:</span>
+                    <span className="font-medium">{state.population}</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all duration-500 ${
+                        state.status === 'critical' || state.status === 'high' ? 'bg-destructive' :
+                        state.status === 'medium' ? 'bg-orange' : 'bg-primary'
+                      }`}
+                      style={{ width: `${state.risk}%` }}
+                    />
+                  </div>
+                  <p className={`text-xs font-medium capitalize ${
+                    state.status === 'critical' || state.status === 'high' ? 'text-destructive' :
+                    state.status === 'medium' ? 'text-orange' : 'text-primary'
+                  }`}>
+                    {state.status} Risk
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 pt-4 border-t">
+            <Button variant="outline" className="w-full">
+              View All 20 States Analytics
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const warningContent = (
+    <div className="space-y-8">
+      <DashboardHeader
+        title="Early Warning System"
+        subtitle="Proactive alerts and intervention recommendations before nutrition crises develop."
+        actions={
+          <Badge variant="outline" className="px-4 py-2 bg-destructive/10 text-destructive border-destructive/20 rounded-full">
+            12 Active Alerts
+          </Badge>
+        }
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatsCard
+          title="Critical Alerts"
+          value="4"
+          subtitle="Immediate action required"
+          icon={<AlertTriangle />}
+          progress={100}
+          progressColor="destructive"
+        />
+        <StatsCard
+          title="Medium Risk"
+          value="6"
+          subtitle="Monitor closely"
+          icon={<TrendingUp />}
+          progress={60}
+        />
+        <StatsCard
+          title="Low Risk"
+          value="2"
+          subtitle="Stable conditions"
+          icon={<CheckCircle2 />}
+          progress={20}
+          progressColor="primary"
+        />
+        <StatsCard
+          title="Response Time"
+          value="2.3h"
+          subtitle="Average alert response"
+          icon={<Clock />}
+          progress={85}
+        />
+      </div>
+
+      <Card className="border-l-4 border-l-destructive">
+        <CardHeader>
+          <CardTitle className="text-lg text-destructive">Critical Risk Clusters</CardTitle>
+          <CardDescription>Immediate intervention required</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[
+            { name: 'Alpha-9', risk: 92, population: '45K', eta: '6 hours' },
+            { name: 'Delta-7', risk: 87, population: '32K', eta: '4 hours' },
+            { name: 'Echo-5', risk: 83, population: '28K', eta: '8 hours' }
+          ].map((cluster, i) => (
+            <div key={i} className="flex items-center justify-between p-3 bg-destructive/5 rounded-lg">
+              <div>
+                <p className="font-semibold text-destructive">{cluster.name}</p>
+                <p className="text-sm text-muted-foreground">{cluster.population} population</p>
+              </div>
+              <div className="text-right">
+                <p className="font-bold text-destructive">{cluster.risk}%</p>
+                <p className="text-xs text-muted-foreground">ETA: {cluster.eta}</p>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
     </div>
   )
 
@@ -403,8 +791,10 @@ export default function YellowsenseDashboard() {
                   </CardDescription>
                 </div>
               </div>
-              <Badge variant="outline" className="bg-primary/5 rounded-full">
-                Bengali / English
+              <Badge variant="outline" className="bg-primary/5 rounded-full flex items-center gap-2 cursor-pointer hover:bg-primary/10 transition-colors" onClick={() => {}}>
+                <Globe className="h-3 w-3" />
+                {selectedLanguage}
+                <ChevronDown className="h-3 w-3" />
               </Badge>
             </div>
           </CardHeader>
@@ -420,7 +810,7 @@ export default function YellowsenseDashboard() {
 
             <div className="flex gap-3 justify-end">
               <div className="bg-primary text-primary-foreground p-4 rounded-2xl rounded-tr-none text-sm max-w-[85%] shadow-md">
-                I had some rice and dal for lunch. I also had some clean water.
+                I had roti and dal for lunch. I also had some clean water.
               </div>
               <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center shrink-0">
                 <User className="h-4 w-4 text-accent-foreground" />
@@ -448,17 +838,50 @@ export default function YellowsenseDashboard() {
                 type="text"
                 value={chatMessage}
                 onChange={(e) => setChatMessage(e.target.value)}
-                placeholder="Describe your meal..."
-                className="pr-12"
+                placeholder="Describe your meal or tap mic to speak..."
+                className="pr-20"
                 onKeyDown={(e) => e.key === "Enter" && setChatMessage("")}
               />
-              <Button
-                size="icon-sm"
-                className="absolute right-2 top-2 h-8 w-8"
-                onClick={() => setChatMessage("")}
-              >
-                <Send className="h-4 w-4" />
-              </Button>
+              <div className="absolute right-2 top-2 flex gap-1">
+                <Button
+                  size="icon-sm"
+                  variant={isRecording ? "destructive" : "outline"}
+                  className="h-8 w-8"
+                  onClick={() => setIsRecording(!isRecording)}
+                >
+                  {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
+                <Button
+                  size="icon-sm"
+                  className="h-8 w-8"
+                  onClick={() => setChatMessage("")}
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            {isRecording && (
+              <div className="mt-2 flex items-center gap-2 text-sm text-destructive">
+                <div className="w-2 h-2 bg-destructive rounded-full animate-pulse"></div>
+                Recording in {selectedLanguage}...
+              </div>
+            )}
+            <div className="mt-3">
+              <p className="text-xs text-muted-foreground mb-2">Quick add Indian foods:</p>
+              <div className="flex flex-wrap gap-2">
+                {indianFoods.map((food, i) => (
+                  <Button
+                    key={i}
+                    variant="outline"
+                    size="sm"
+                    className="h-8 px-3 text-xs"
+                    onClick={() => setChatMessage(prev => prev + (prev ? ", " : "") + food.name.toLowerCase())}
+                  >
+                    <span className="mr-1">{food.icon}</span>
+                    {food.name}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         </Card>
@@ -548,14 +971,305 @@ export default function YellowsenseDashboard() {
     </div>
   )
 
+  const riskCheckerContent = (
+    <div className="space-y-8">
+      <DashboardHeader
+        title="Risk Checker Tool"
+        subtitle="Input age, meals, protein, attendance - AI generates risk score and recommendations."
+        actions={
+          <Badge variant="outline" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 rounded-full">
+            91% Accuracy
+          </Badge>
+        }
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Calculator className="h-5 w-5 text-primary" />
+              Risk Assessment Form
+            </CardTitle>
+            <CardDescription>Enter beneficiary details for AI risk analysis</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Age</label>
+              <div className="flex items-center gap-4">
+                <input
+                  type="range"
+                  min="1"
+                  max="80"
+                  value={riskFormData.age}
+                  onChange={(e) => setRiskFormData(prev => ({...prev, age: parseInt(e.target.value)}))}
+                  className="flex-1 h-2 bg-muted rounded-lg appearance-none cursor-pointer"
+                />
+                <span className="text-lg font-bold text-primary w-12">{riskFormData.age}y</span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <Utensils className="h-4 w-4" />
+                Meal Frequency (per day)
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {[1, 2, 3, 4].map(num => (
+                  <Button
+                    key={num}
+                    variant={riskFormData.mealFrequency === num ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setRiskFormData(prev => ({...prev, mealFrequency: num}))}
+                  >
+                    {num}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <Apple className="h-4 w-4" />
+                Protein Intake Level
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {["low", "medium", "high"].map(level => (
+                  <Button
+                    key={level}
+                    variant={riskFormData.proteinIntake === level ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setRiskFormData(prev => ({...prev, proteinIntake: level}))}
+                    className="capitalize"
+                  >
+                    {level}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <School className="h-4 w-4" />
+                School Attendance
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant={riskFormData.schoolAttendance ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setRiskFormData(prev => ({...prev, schoolAttendance: true}))}
+                >
+                  Regular
+                </Button>
+                <Button
+                  variant={!riskFormData.schoolAttendance ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setRiskFormData(prev => ({...prev, schoolAttendance: false}))}
+                >
+                  Irregular
+                </Button>
+              </div>
+            </div>
+
+            <Button className="w-full h-12 text-base font-semibold">
+              Generate Risk Score
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">AI Risk Analysis</CardTitle>
+            <CardDescription>Real-time risk assessment and recommendations</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="text-center py-6">
+              <div className="relative h-32 w-32 mx-auto mb-4">
+                <svg className="h-full w-full" viewBox="0 0 36 36">
+                  <path
+                    className="stroke-muted"
+                    strokeWidth="3"
+                    fill="none"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path
+                    className="stroke-orange"
+                    strokeWidth="3"
+                    strokeDasharray="67, 100"
+                    strokeLinecap="round"
+                    fill="none"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-3xl font-bold text-orange">67%</span>
+                  <span className="text-xs text-muted-foreground uppercase">Risk Score</span>
+                </div>
+              </div>
+              <Badge variant="secondary" className="bg-orange/10 text-orange border-orange/20">
+                Medium Risk
+              </Badge>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-4 bg-orange/5 rounded-lg border border-orange/20">
+                <h4 className="font-semibold text-orange mb-2">AI Recommendations</h4>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-orange mt-0.5 shrink-0" />
+                    Increase meal frequency to 3 times daily
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-orange mt-0.5 shrink-0" />
+                    Add protein-rich foods like dal, eggs, or milk
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-orange mt-0.5 shrink-0" />
+                    Include green vegetables in daily diet
+                  </li>
+                </ul>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 bg-muted/50 rounded-lg text-center">
+                  <p className="text-xs uppercase text-muted-foreground mb-1">Prediction Window</p>
+                  <p className="font-bold">14-30 Days</p>
+                </div>
+                <div className="p-3 bg-muted/50 rounded-lg text-center">
+                  <p className="text-xs uppercase text-muted-foreground mb-1">Confidence</p>
+                  <p className="font-bold">91%</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+
+  const interventionsContent = (
+    <div className="space-y-8">
+      <DashboardHeader
+        title="AI Interventions"
+        subtitle="Automated supply optimization and resource allocation powered by machine learning."
+        actions={
+          <Badge variant="outline" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 rounded-full">
+            8 Active Routes
+          </Badge>
+        }
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatsCard
+          title="Active Routes"
+          value="8"
+          subtitle="AI-optimized supply chains"
+          icon={<Zap />}
+          progress={80}
+          progressColor="primary"
+        />
+        <StatsCard
+          title="Efficiency Gain"
+          value="34%"
+          subtitle="vs traditional routing"
+          icon={<TrendingUp />}
+          progress={34}
+        />
+        <StatsCard
+          title="Resources Saved"
+          value="$2.4M"
+          subtitle="Cost optimization this quarter"
+          icon={<BarChart3 />}
+          progress={75}
+        />
+        <StatsCard
+          title="Delivery Time"
+          value="4.2h"
+          subtitle="Average to high-risk areas"
+          icon={<Clock />}
+          progress={90}
+        />
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Active Supply Routes</CardTitle>
+          <CardDescription>Real-time AI-optimized logistics</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[
+            { from: 'Central Hub A', to: 'Alpha-9', status: 'In Transit', eta: '2.5h', efficiency: '94%' },
+            { from: 'Regional Depot', to: 'Delta-7', status: 'Loading', eta: '4.0h', efficiency: '87%' },
+            { from: 'Emergency Stock', to: 'Echo-5', status: 'Dispatched', eta: '1.8h', efficiency: '96%' }
+          ].map((route, i) => (
+            <div key={i} className="flex items-center justify-between p-4 bg-primary/5 rounded-lg border border-primary/20">
+              <div>
+                <p className="font-semibold">{route.from} → {route.to}</p>
+                <p className="text-sm text-muted-foreground">{route.status} • ETA: {route.eta}</p>
+              </div>
+              <div className="text-right">
+                <p className="font-bold text-primary">{route.efficiency}</p>
+                <p className="text-xs text-muted-foreground">Efficiency</p>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  )
+
   return (
     <div className={`min-h-screen transition-all duration-1000 ${isLoading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+      {/* Real-time Notifications */}
+      <div className="fixed top-4 right-4 z-50 space-y-2">
+        {notifications.map((notification) => (
+          <div
+            key={notification.id}
+            className={`p-4 rounded-lg shadow-lg border backdrop-blur-sm animate-in slide-in-from-right-full duration-300 max-w-sm ${
+              notification.type === 'critical' 
+                ? 'bg-destructive/10 border-destructive/20 text-destructive' 
+                : 'bg-orange/10 border-orange/20 text-orange'
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <div className={`p-1 rounded-full ${
+                notification.type === 'critical' ? 'bg-destructive/20' : 'bg-orange/20'
+              }`}>
+                <Bell className="h-4 w-4" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">{notification.message}</p>
+                <p className="text-xs opacity-70 mt-1">{notification.time}</p>
+              </div>
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                className="h-6 w-6 opacity-70 hover:opacity-100"
+                onClick={() => setNotifications(prev => prev.filter(n => n.id !== notification.id))}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
       {activeTab === "dashboard" ? (
         <DashboardLayout
           sidebar={sidebarContent}
           rightPanel={rightPanelContent}
         >
           {dashboardContent}
+        </DashboardLayout>
+      ) : activeTab === "warning" ? (
+        <DashboardLayout sidebar={sidebarContent}>
+          {warningContent}
+        </DashboardLayout>
+      ) : activeTab === "riskchecker" ? (
+        <DashboardLayout sidebar={sidebarContent}>
+          {riskCheckerContent}
+        </DashboardLayout>
+      ) : activeTab === "interventions" ? (
+        <DashboardLayout sidebar={sidebarContent}>
+          {interventionsContent}
         </DashboardLayout>
       ) : (
         <DashboardLayout sidebar={sidebarContent}>
@@ -565,6 +1279,14 @@ export default function YellowsenseDashboard() {
       
       <footer className="border-t bg-card/50 backdrop-blur-sm py-6">
         <div className="container px-4 text-center space-y-2">
+          <div className="flex justify-center items-center gap-4 mb-2">
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">
+              Built on NFHS5 Data
+            </Badge>
+            <Badge variant="outline" className="bg-orange/5 text-orange border-orange/20">
+              91% Prediction Accuracy
+            </Badge>
+          </div>
           <p className="text-sm font-medium text-muted-foreground">
             © 2025 Yellowsense Technologies. All rights reserved.
           </p>
