@@ -74,6 +74,32 @@ export default function YellowsenseDashboard() {
     recommendations: string[];
   } | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
+  const [chatMessages, setChatMessages] = useState([
+    { type: 'ai', content: 'Hello! I\'m your personalized nutrition assistant. I can help you track your meals, provide dietary recommendations, and monitor your nutritional health. What would you like to discuss today?' },
+    { type: 'user', content: 'I had roti and dal for lunch today. I also drank some clean water. Can you help me understand if this is enough?' },
+    { type: 'ai', content: 'Great start! Roti provides carbohydrates for energy, and dal is an excellent source of plant-based protein. However, your meal is missing some key nutrients.' }
+  ])
+  const [isSendingMessage, setIsSendingMessage] = useState(false)
+  const sendChatMessage = () => {
+    if (!chatMessage.trim()) return
+    setIsSendingMessage(true)
+    setChatMessages(prev => [...prev, { type: 'user', content: chatMessage }])
+    setChatMessage('')
+    
+    setTimeout(() => {
+      const responses = [
+        'Based on your meal, I recommend adding green vegetables like spinach or fenugreek leaves for iron and vitamins.',
+        'Your protein intake looks good with dal! Consider adding a source of Vitamin C like lemon or tomato.',
+        'This is a balanced meal foundation. Try including yogurt for probiotics and calcium.',
+        'Great choice with roti and dal! Add some seasonal vegetables to make it more nutritionally complete.',
+        'Your meal provides good energy and protein. Consider adding fruits for additional vitamins and fiber.'
+      ]
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)]
+      setChatMessages(prev => [...prev, { type: 'ai', content: randomResponse }])
+      setIsSendingMessage(false)
+    }, 1500)
+  }
+  
   const generateRiskAssessment = () => {
     setIsGenerating(true)
     setTimeout(() => {
@@ -1046,7 +1072,7 @@ export default function YellowsenseDashboard() {
                         onChange={(e) => setChatMessage(e.target.value)}
                         placeholder="Describe your meal, ask nutrition questions, or tap mic to speak..."
                         className="pr-24 h-12 text-sm border-2 border-primary/20 focus:border-primary/40"
-                        onKeyDown={(e) => e.key === "Enter" && setChatMessage("")}
+                        onKeyDown={(e) => e.key === "Enter" && sendChatMessage()}
                       />
                       <div className="absolute right-2 top-2 flex gap-1">
                         <Button
@@ -1060,7 +1086,7 @@ export default function YellowsenseDashboard() {
                         <Button
                           size="sm"
                           className="h-8 w-8 p-0 bg-gradient-to-r from-primary to-primary/80"
-                          onClick={() => setChatMessage("")}
+                          onClick={sendChatMessage}
                         >
                           <Send className="h-4 w-4" />
                         </Button>
