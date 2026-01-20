@@ -32,7 +32,10 @@ import {
   Apple,
   Bell,
   X,
-  MapPin
+  MapPin,
+  Lightbulb,
+  ArrowRight,
+  Sparkles
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -126,7 +129,7 @@ export default function YellowsenseDashboard() {
           <Apple className="h-7 w-7 text-white drop-shadow-sm" />
         </div>
         <div>
-          <h2 className="font-bold text-xl bg-gradient-to-r from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] bg-clip-text text-transparent">Nourishment AI</h2>
+          <h2 className="font-bold text-xl bg-gradient-to-r from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] bg-clip-text text-transparent">Nourish AI</h2>
           <p className="text-xs text-sidebar-foreground/60 font-medium">Intelligence System</p>
         </div>
       </SidebarHeader>
@@ -646,9 +649,15 @@ export default function YellowsenseDashboard() {
         title="Early Warning System"
         subtitle="Proactive alerts and intervention recommendations before nutrition crises develop."
         actions={
-          <Badge variant="outline" className="px-4 py-2 bg-destructive/10 text-destructive border-destructive/20 rounded-full">
-            12 Active Alerts
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="px-4 py-2 bg-destructive/10 text-destructive border-destructive/20 rounded-full animate-pulse">
+              🚨 12 Active Alerts
+            </Badge>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Bell className="h-4 w-4" />
+              Alert Settings
+            </Button>
+          </div>
         }
       />
 
@@ -685,28 +694,133 @@ export default function YellowsenseDashboard() {
         />
       </div>
 
-      <Card className="border-l-4 border-l-destructive">
-        <CardHeader>
-          <CardTitle className="text-lg text-destructive">Critical Risk Clusters</CardTitle>
-          <CardDescription>Immediate intervention required</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {[
-            { name: 'Alpha-9', risk: 92, population: '45K', eta: '6 hours' },
-            { name: 'Delta-7', risk: 87, population: '32K', eta: '4 hours' },
-            { name: 'Echo-5', risk: 83, population: '28K', eta: '8 hours' }
-          ].map((cluster, i) => (
-            <div key={i} className="flex items-center justify-between p-3 bg-destructive/5 rounded-lg">
-              <div>
-                <p className="font-semibold text-destructive">{cluster.name}</p>
-                <p className="text-sm text-muted-foreground">{cluster.population} population</p>
-              </div>
-              <div className="text-right">
-                <p className="font-bold text-destructive">{cluster.risk}%</p>
-                <p className="text-xs text-muted-foreground">ETA: {cluster.eta}</p>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="border-l-4 border-l-destructive shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-destructive/5 to-destructive/10">
+            <CardTitle className="text-lg text-destructive flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 animate-pulse" />
+              Critical Risk Clusters
+            </CardTitle>
+            <CardDescription>Immediate intervention required</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="space-y-0">
+              {[
+                { name: 'Alpha-9', risk: 92, population: '45K', eta: '6 hours', severity: 'Critical', lastAlert: '5 min ago', interventions: 3 },
+                { name: 'Delta-7', risk: 87, population: '32K', eta: '4 hours', severity: 'High', lastAlert: '12 min ago', interventions: 2 },
+                { name: 'Echo-5', risk: 83, population: '28K', eta: '8 hours', severity: 'High', lastAlert: '8 min ago', interventions: 1 }
+              ].map((cluster, i) => (
+                <div key={i} className="p-4 border-b border-destructive/10 hover:bg-destructive/5 transition-all cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <div className="h-10 w-10 rounded-full bg-destructive/20 flex items-center justify-center">
+                          <AlertTriangle className="h-5 w-5 text-destructive" />
+                        </div>
+                        <div className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-destructive animate-ping" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-destructive">{cluster.name}</p>
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                          <span>👥 {cluster.population}</span>
+                          <span>⏱️ ETA: {cluster.eta}</span>
+                          <span>🚨 {cluster.lastAlert}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-destructive">{cluster.risk}%</p>
+                      <Badge variant="destructive" className="text-xs">{cluster.severity}</Badge>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-card/50 px-3 py-1 rounded-full border border-destructive/20">
+                        <span className="text-xs text-muted-foreground">Active: {cluster.interventions} interventions</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="destructive" className="h-7 px-3 text-xs">
+                        Emergency
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 px-3 text-xs">
+                        Details
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-orange shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-orange/5 to-orange/10">
+            <CardTitle className="text-lg text-orange flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Alert Timeline
+            </CardTitle>
+            <CardDescription>Recent warning system activity</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[
+              { time: '2 min ago', type: 'Critical', message: 'Alpha-9 cluster exceeded 90% risk threshold', icon: '🚨' },
+              { time: '15 min ago', type: 'Warning', message: 'Delta-7 showing rapid deterioration', icon: '⚠️' },
+              { time: '32 min ago', type: 'Info', message: 'Echo-5 intervention supplies dispatched', icon: '📦' },
+              { time: '1 hour ago', type: 'Success', message: 'Beta-3 risk level decreased to medium', icon: '✅' }
+            ].map((alert, i) => (
+              <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
+                <div className="text-lg">{alert.icon}</div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <Badge variant={alert.type === 'Critical' ? 'destructive' : alert.type === 'Warning' ? 'secondary' : 'outline'} className="text-xs">
+                      {alert.type}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">{alert.time}</span>
+                  </div>
+                  <p className="text-sm">{alert.message}</p>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Brain className="h-5 w-5 text-primary" />
+            AI Prediction Model
+          </CardTitle>
+          <CardDescription>Machine learning insights and forecasting accuracy</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
+                <span className="text-2xl">🎯</span>
+              </div>
+              <h4 className="font-semibold text-primary mb-1">Prediction Accuracy</h4>
+              <p className="text-3xl font-bold text-primary">94.2%</p>
+              <p className="text-xs text-muted-foreground">Based on NFHS5 data</p>
+            </div>
+            <div className="text-center">
+              <div className="h-16 w-16 rounded-full bg-orange/20 flex items-center justify-center mx-auto mb-3">
+                <span className="text-2xl">⚡</span>
+              </div>
+              <h4 className="font-semibold text-orange mb-1">Early Detection</h4>
+              <p className="text-3xl font-bold text-orange">14-30</p>
+              <p className="text-xs text-muted-foreground">Days ahead warning</p>
+            </div>
+            <div className="text-center">
+              <div className="h-16 w-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-3">
+                <span className="text-2xl">🛡️</span>
+              </div>
+              <h4 className="font-semibold text-green-600 mb-1">Prevention Rate</h4>
+              <p className="text-3xl font-bold text-green-600">87%</p>
+              <p className="text-xs text-muted-foreground">Crisis prevention success</p>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -770,134 +884,202 @@ export default function YellowsenseDashboard() {
   )
 
   const beneficiaryContent = (
-    <div className="max-w-6xl mx-auto">
+    <div className="space-y-8">
       <DashboardHeader
         title="Beneficiary AI Assistant"
-        subtitle="Personal nutrition guidance powered by AI intelligence."
+        subtitle="Personalized nutrition guidance powered by advanced AI intelligence and multilingual support."
+        actions={
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 rounded-full flex items-center gap-2">
+              <Brain className="h-4 w-4" />
+              AI Active
+            </Badge>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Globe className="h-4 w-4" />
+              Language Settings
+            </Button>
+          </div>
+        }
       />
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card className="flex flex-col h-[600px]">
-          <CardHeader className="border-b bg-muted/30 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-                  <MessageSquare className="h-5 w-5 text-primary-foreground" />
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        {/* Chat Interface */}
+        <div className="xl:col-span-2">
+          <Card className="shadow-xl border-2 border-primary/20 h-[700px] flex flex-col">
+            <CardHeader className="border-b bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
+                    <MessageSquare className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-bold">Nourish AI Helper</CardTitle>
+                    <CardDescription className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                      <span>Active Assistance in {selectedLanguage}</span>
+                    </CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-base">Nourishment AI Helper</CardTitle>
-                  <CardDescription className="flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span> Active Assistance
-                  </CardDescription>
-                </div>
-              </div>
-              <Badge variant="outline" className="bg-primary/5 rounded-full flex items-center gap-2 cursor-pointer hover:bg-primary/10 transition-colors" onClick={() => {}}>
-                <Globe className="h-3 w-3" />
-                {selectedLanguage}
-                <ChevronDown className="h-3 w-3" />
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="flex-1 p-6 space-y-6 overflow-y-auto">
-            <div className="flex gap-3">
-              <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                <Leaf className="h-4 w-4 text-primary" />
-              </div>
-              <div className="bg-muted p-4 rounded-2xl rounded-tl-none text-sm max-w-[85%] border border-border/50 shadow-sm">
-                Hello! I am your Yellowsense nutrition assistant. What have you eaten today?
-              </div>
-            </div>
-
-            <div className="flex gap-3 justify-end">
-              <div className="bg-primary text-primary-foreground p-4 rounded-2xl rounded-tr-none text-sm max-w-[85%] shadow-md">
-                I had roti and dal for lunch. I also had some clean water.
-              </div>
-              <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center shrink-0">
-                <User className="h-4 w-4 text-accent-foreground" />
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                <Leaf className="h-4 w-4 text-primary" />
-              </div>
-              <div className="bg-muted p-4 rounded-2xl rounded-tl-none text-sm max-w-[85%] border border-border/50 shadow-sm space-y-3">
-                <p>That is a good start! Rice provides energy and dal provides protein. However, you are missing micronutrients today.</p>
-                <div className="bg-card p-3 rounded-lg border border-primary/20">
-                  <p className="font-semibold text-primary mb-1">AI Recommendation:</p>
-                  <p className="text-xs text-muted-foreground">
-                    Try adding some dark leafy greens or carrots to your next meal.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-          <div className="p-4 border-t bg-muted/10">
-            <div className="relative">
-              <Input
-                type="text"
-                value={chatMessage}
-                onChange={(e) => setChatMessage(e.target.value)}
-                placeholder="Describe your meal or tap mic to speak..."
-                className="pr-20"
-                onKeyDown={(e) => e.key === "Enter" && setChatMessage("")}
-              />
-              <div className="absolute right-2 top-2 flex gap-1">
-                <Button
-                  size="icon-sm"
-                  variant={isRecording ? "destructive" : "outline"}
-                  className="h-8 w-8"
-                  onClick={() => setIsRecording(!isRecording)}
-                >
-                  {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                </Button>
-                <Button
-                  size="icon-sm"
-                  className="h-8 w-8"
-                  onClick={() => setChatMessage("")}
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            {isRecording && (
-              <div className="mt-2 flex items-center gap-2 text-sm text-destructive">
-                <div className="w-2 h-2 bg-destructive rounded-full animate-pulse"></div>
-                Recording in {selectedLanguage}...
-              </div>
-            )}
-            <div className="mt-3">
-              <p className="text-xs text-muted-foreground mb-2">Quick add Indian foods:</p>
-              <div className="flex flex-wrap gap-2">
-                {indianFoods.map((food, i) => (
-                  <Button
-                    key={i}
-                    variant="outline"
-                    size="sm"
-                    className="h-8 px-3 text-xs"
-                    onClick={() => setChatMessage(prev => prev + (prev ? ", " : "") + food.name.toLowerCase())}
-                  >
-                    <span className="mr-1">{food.icon}</span>
-                    {food.name}
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="bg-primary/5 rounded-full flex items-center gap-2 cursor-pointer hover:bg-primary/10 transition-colors px-3 py-1" onClick={() => {}}>
+                    <Globe className="h-3 w-3" />
+                    {selectedLanguage}
+                    <ChevronDown className="h-3 w-3" />
+                  </Badge>
+                  <Button size="sm" variant="outline" className="gap-2">
+                    <Users className="h-3 w-3" />
+                    History
                   </Button>
-                ))}
+                </div>
               </div>
-            </div>
-          </div>
-        </Card>
+            </CardHeader>
+            
+            <CardContent className="flex-1 p-0 overflow-hidden">
+              <div className="h-full flex flex-col">
+                {/* Messages Area */}
+                <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-muted/20 to-muted/10">
+                  <div className="flex gap-4">
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/30 flex items-center justify-center shrink-0 shadow-md">
+                      <Brain className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="bg-white p-4 rounded-2xl rounded-tl-none text-sm max-w-[85%] border border-primary/20 shadow-sm">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Sparkles className="h-4 w-4 text-primary" />
+                        <span className="font-semibold text-primary">AI Assistant</span>
+                      </div>
+                      <p>Hello! I'm your personalized nutrition assistant. I can help you track your meals, provide dietary recommendations, and monitor your nutritional health. What would you like to discuss today?</p>
+                    </div>
+                  </div>
 
+                  <div className="flex gap-4 justify-end">
+                    <div className="bg-gradient-to-br from-primary to-primary/90 text-white p-4 rounded-2xl rounded-tr-none text-sm max-w-[85%] shadow-md">
+                      I had roti and dal for lunch today. I also drank some clean water. Can you help me understand if this is enough?
+                    </div>
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center shrink-0 shadow-md">
+                      <User className="h-5 w-5 text-white" />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/30 flex items-center justify-center shrink-0 shadow-md">
+                      <Brain className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="bg-white p-4 rounded-2xl rounded-tl-none text-sm max-w-[85%] border border-primary/20 shadow-sm space-y-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Lightbulb className="h-4 w-4 text-orange" />
+                        <span className="font-semibold text-orange">Nutritional Analysis</span>
+                      </div>
+                      <p>Great start! Roti provides carbohydrates for energy, and dal is an excellent source of plant-based protein. However, your meal is missing some key nutrients.</p>
+                      
+                      <div className="bg-gradient-to-r from-orange/10 to-orange/5 p-3 rounded-lg border border-orange/20">
+                        <h4 className="font-semibold text-orange mb-2 flex items-center gap-2">
+                          <Target className="h-4 w-4" />
+                          AI Recommendations
+                        </h4>
+                        <ul className="space-y-1 text-xs">
+                          <li className="flex items-center gap-2">
+                            <CheckCircle2 className="h-3 w-3 text-green-500" />
+                            Add green vegetables (spinach, fenugreek leaves)
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <CheckCircle2 className="h-3 w-3 text-green-500" />
+                            Include a source of Vitamin C (lemon, tomato)
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <CheckCircle2 className="h-3 w-3 text-green-500" />
+                            Consider adding yogurt for probiotics
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-3 rounded-lg border border-blue-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-blue-700">Nutritional Completeness</span>
+                          <span className="text-sm font-bold text-blue-700">65%</span>
+                        </div>
+                        <div className="w-full bg-blue-200 rounded-full h-2">
+                          <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full w-2/3 transition-all duration-1000"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Input Area */}
+                <div className="border-t bg-white p-4">
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        value={chatMessage}
+                        onChange={(e) => setChatMessage(e.target.value)}
+                        placeholder="Describe your meal, ask nutrition questions, or tap mic to speak..."
+                        className="pr-24 h-12 text-sm border-2 border-primary/20 focus:border-primary/40"
+                        onKeyDown={(e) => e.key === "Enter" && setChatMessage("")}
+                      />
+                      <div className="absolute right-2 top-2 flex gap-1">
+                        <Button
+                          size="sm"
+                          variant={isRecording ? "destructive" : "outline"}
+                          className="h-8 w-8 p-0"
+                          onClick={() => setIsRecording(!isRecording)}
+                        >
+                          {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="h-8 w-8 p-0 bg-gradient-to-r from-primary to-primary/80"
+                          onClick={() => setChatMessage("")}
+                        >
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {isRecording && (
+                      <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/5 p-2 rounded-lg">
+                        <div className="w-2 h-2 bg-destructive rounded-full animate-pulse"></div>
+                        <span>Recording in {selectedLanguage}... Speak clearly about your meals</span>
+                      </div>
+                    )}
+                    
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-2 font-medium">Quick add Indian foods:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {indianFoods.map((food, i) => (
+                          <Button
+                            key={i}
+                            variant="outline"
+                            size="sm"
+                            className="h-8 px-3 text-xs hover:bg-primary/10 border-primary/20"
+                            onClick={() => setChatMessage(prev => prev + (prev ? ", " : "") + food.name.toLowerCase())}
+                          >
+                            {food.name}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Analytics Panel */}
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
+          <Card className="shadow-xl border-2 border-primary/20">
+            <CardHeader className="bg-gradient-to-r from-primary/5 to-primary/10 border-b border-primary/20">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Utensils className="h-5 w-5 text-primary" />
-                Today's Nourishment Index
+                Today's Nutrition Score
               </CardTitle>
+              <CardDescription>Real-time nutritional assessment</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-center py-4">
-                <div className="relative h-32 w-32">
-                  <svg className="h-full w-full" viewBox="0 0 36 36">
+            <CardContent className="p-6 space-y-6">
+              <div className="text-center">
+                <div className="relative h-32 w-32 mx-auto mb-4">
+                  <svg className="h-full w-full transform -rotate-90" viewBox="0 0 36 36">
                     <path
                       className="stroke-muted"
                       strokeWidth="3"
@@ -907,63 +1089,87 @@ export default function YellowsenseDashboard() {
                     <path
                       className="stroke-primary"
                       strokeWidth="3"
-                      strokeDasharray="42, 100"
+                      strokeDasharray="65, 100"
                       strokeLinecap="round"
                       fill="none"
                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     />
                   </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                    <span className="text-2xl font-bold">42%</span>
-                    <span className="text-[10px] text-muted-foreground uppercase">Score</span>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-3xl font-bold text-primary">65%</span>
+                    <span className="text-xs text-muted-foreground uppercase tracking-wide">Complete</span>
                   </div>
                 </div>
+                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-2 font-semibold">
+                  Good Progress
+                </Badge>
               </div>
+              
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-muted/50 rounded-lg text-center">
-                  <p className="text-[10px] uppercase text-muted-foreground mb-1">Diversity</p>
-                  <p className="font-bold">2/10</p>
+                <div className="p-3 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 text-center">
+                  <Apple className="h-6 w-6 mx-auto mb-2 text-green-600" />
+                  <p className="text-xs uppercase text-green-600 mb-1 tracking-wide font-medium">Diversity</p>
+                  <p className="font-bold text-lg text-green-700">4/10</p>
+                  <p className="text-xs text-green-600">Food Groups</p>
                 </div>
-                <div className="p-3 bg-muted/50 rounded-lg text-center">
-                  <p className="text-[10px] uppercase text-muted-foreground mb-1">Frequency</p>
-                  <p className="font-bold">1 Meal</p>
+                <div className="p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 text-center">
+                  <Clock className="h-6 w-6 mx-auto mb-2 text-blue-600" />
+                  <p className="text-xs uppercase text-blue-600 mb-1 tracking-wide font-medium">Frequency</p>
+                  <p className="font-bold text-lg text-blue-700">2</p>
+                  <p className="text-xs text-blue-600">Meals Today</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-destructive/5 border-l-4 border-l-destructive">
-            <CardHeader className="pb-2">
+          <Card className="bg-gradient-to-br from-destructive/5 to-destructive/10 border-2 border-destructive/20 shadow-xl">
+            <CardHeader>
               <div className="flex items-center gap-2 text-destructive">
                 <AlertTriangle className="h-5 w-5" />
-                <CardTitle className="text-lg">Early Warning Alert</CardTitle>
+                <CardTitle className="text-lg">Nutrition Alert</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm">
-                Your current nourishment trend indicates a High Risk of micronutrient deficiency within the next 7 days.
+                Your current meal pattern shows potential micronutrient gaps. Consider adding more variety to your diet.
               </p>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground bg-card/50 p-3 rounded-lg border border-destructive/10">
-                <Clock className="h-4 w-4" />
-                <span>Forecast: 14-day risk window active</span>
+              <div className="bg-white/50 p-3 rounded-lg border border-destructive/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="h-4 w-4 text-destructive" />
+                  <span className="text-sm font-medium text-destructive">Risk Window</span>
+                </div>
+                <p className="text-xs text-muted-foreground">7-day nutritional deficiency forecast active</p>
               </div>
-              <Button variant="destructive" className="w-full h-10 shadow-sm">
-                Request Nutrition Support
+              <Button variant="destructive" className="w-full h-10 shadow-sm font-semibold">
+                Get Nutrition Plan
               </Button>
             </CardContent>
           </Card>
 
-          <Card className="bg-green-50/50 border-l-4 border-l-green-500">
-            <CardHeader className="pb-2">
-              <div className="flex items-center gap-2 text-green-600">
-                <CheckCircle2 className="h-5 w-5" />
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 shadow-xl">
+            <CardHeader>
+              <div className="flex items-center gap-2 text-green-700">
+                <TrendingUp className="h-5 w-5" />
                 <CardTitle className="text-lg">AI Impact Forecast</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                By adding 1 portion of green vegetables daily, your risk score will improve from 42% to 68% within 10 days.
+              <p className="text-sm text-green-800 mb-4">
+                By following AI recommendations, your nutrition score could improve to 85% within 10 days.
               </p>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-green-700">Current Score</span>
+                  <span className="font-bold text-green-700">65%</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-green-700">Projected Score</span>
+                  <span className="font-bold text-green-700">85%</span>
+                </div>
+                <div className="w-full bg-green-200 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full w-4/5 transition-all duration-1000"></div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -974,174 +1180,371 @@ export default function YellowsenseDashboard() {
   const riskCheckerContent = (
     <div className="space-y-8">
       <DashboardHeader
-        title="Risk Checker Tool"
-        subtitle="Input age, meals, protein, attendance - AI generates risk score and recommendations."
+        title="Risk Assessment Tool"
+        subtitle="AI-powered nutrition risk analysis with personalized recommendations and intervention planning."
         actions={
-          <Badge variant="outline" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 rounded-full">
-            91% Accuracy
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 rounded-full flex items-center gap-2">
+              <Target className="h-4 w-4" />
+              91% Accuracy
+            </Badge>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Users className="h-4 w-4" />
+              Bulk Assessment
+            </Button>
+          </div>
         }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Calculator className="h-5 w-5 text-primary" />
-              Risk Assessment Form
-            </CardTitle>
-            <CardDescription>Enter beneficiary details for AI risk analysis</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Age</label>
-              <div className="flex items-center gap-4">
-                <input
-                  type="range"
-                  min="1"
-                  max="80"
-                  value={riskFormData.age}
-                  onChange={(e) => setRiskFormData(prev => ({...prev, age: parseInt(e.target.value)}))}
-                  className="flex-1 h-2 bg-muted rounded-lg appearance-none cursor-pointer"
-                />
-                <span className="text-lg font-bold text-primary w-12">{riskFormData.age}y</span>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        {/* Assessment Form */}
+        <div className="xl:col-span-2">
+          <Card className="shadow-xl border-2 border-primary/20">
+            <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border-b border-primary/20">
+              <CardTitle className="text-xl flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Calculator className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-bold">Risk Assessment Form</h3>
+                  <p className="text-sm text-muted-foreground font-normal">Complete beneficiary profile for AI analysis</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-8">
+              {/* Age Section */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-base font-semibold flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                      <User className="h-4 w-4 text-blue-600" />
+                    </div>
+                    Age Assessment
+                  </label>
+                  <div className="text-right">
+                    <span className="text-2xl font-bold text-primary">{riskFormData.age}</span>
+                    <span className="text-sm text-muted-foreground ml-1">years</span>
+                  </div>
+                </div>
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-xl">
+                  <input
+                    type="range"
+                    min="1"
+                    max="80"
+                    value={riskFormData.age}
+                    onChange={(e) => setRiskFormData(prev => ({...prev, age: parseInt(e.target.value)}))}
+                    className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer slider"
+                  />
+                  <div className="flex justify-between text-xs text-blue-600 mt-2 font-medium">
+                    <span>Infant (1y)</span>
+                    <span>Adult (40y)</span>
+                    <span>Senior (80y)</span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <Utensils className="h-4 w-4" />
-                Meal Frequency (per day)
-              </label>
-              <div className="grid grid-cols-4 gap-2">
-                {[1, 2, 3, 4].map(num => (
-                  <Button
-                    key={num}
-                    variant={riskFormData.mealFrequency === num ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setRiskFormData(prev => ({...prev, mealFrequency: num}))}
-                  >
-                    {num}
-                  </Button>
+              {/* Meal Frequency Section */}
+              <div className="space-y-4">
+                <label className="text-base font-semibold flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center">
+                    <Utensils className="h-4 w-4 text-orange-600" />
+                  </div>
+                  Daily Meal Frequency
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {[
+                    { num: 1, label: "Once", desc: "Single meal", tooltip: "High Risk: Only one meal per day increases malnutrition risk" },
+                    { num: 2, label: "Twice", desc: "Two meals", tooltip: "Medium Risk: Two meals provide basic nutrition but may be insufficient" },
+                    { num: 3, label: "Thrice", desc: "Three meals", tooltip: "Low Risk: Three meals per day meets most nutritional requirements" },
+                    { num: 4, label: "Four+", desc: "Multiple", tooltip: "Optimal: Multiple meals ensure consistent nutrition throughout the day" }
+                  ].map(({num, label, desc, tooltip}) => (
+                    <div key={num} className="relative group">
+                      <Button
+                        variant={riskFormData.mealFrequency === num ? "default" : "outline"}
+                        onClick={() => setRiskFormData(prev => ({...prev, mealFrequency: num}))}
+                        className={`h-14 w-full flex flex-col gap-1 p-2 text-center ${
+                          riskFormData.mealFrequency === num 
+                            ? 'bg-gradient-to-br from-primary to-primary/80 text-white shadow-lg' 
+                            : 'hover:bg-orange-50 border-orange-200'
+                        }`}
+                      >
+                        <div className="flex items-center justify-center">
+                          <Utensils className="h-4 w-4" />
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs font-semibold">{label}</p>
+                          <p className="text-xs opacity-70">{desc}</p>
+                        </div>
+                      </Button>
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                        {tooltip}
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Protein Intake Section */}
+              <div className="space-y-4">
+                <label className="text-base font-semibold flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
+                    <Apple className="h-4 w-4 text-green-600" />
+                  </div>
+                  Protein Intake Level
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    { 
+                      level: "low", 
+                      icon: AlertTriangle, 
+                      color: "red", 
+                      title: "Minimal", 
+                      desc: "Rarely protein foods",
+                      tooltip: "Minimal Protein: Rarely consumes protein-rich foods like dal or legumes"
+                    },
+                    { 
+                      level: "medium", 
+                      icon: Activity, 
+                      color: "orange", 
+                      title: "Moderate", 
+                      desc: "Limited protein intake",
+                      tooltip: "Moderate Protein: Regular but limited protein intake - daily dal, occasional eggs/milk"
+                    },
+                    { 
+                      level: "high", 
+                      icon: CheckCircle2, 
+                      color: "green", 
+                      title: "Adequate", 
+                      desc: "Diverse protein sources",
+                      tooltip: "Adequate Protein: Consistent diverse protein sources - dal, eggs, milk, meat, nuts"
+                    }
+                  ].map(({level, icon: Icon, color, title, desc, tooltip}) => (
+                    <div key={level} className="relative group">
+                      <Button
+                        variant={riskFormData.proteinIntake === level ? "default" : "outline"}
+                        onClick={() => setRiskFormData(prev => ({...prev, proteinIntake: level}))}
+                        className={`h-16 w-full flex flex-col gap-1 p-3 text-center ${
+                          riskFormData.proteinIntake === level 
+                            ? 'bg-gradient-to-br from-primary to-primary/80 text-white shadow-lg' 
+                            : `hover:bg-${color}-50 border-${color}-200`
+                        }`}
+                      >
+                        <div className="flex items-center justify-center">
+                          <Icon className={`h-4 w-4 ${
+                            riskFormData.proteinIntake === level ? 'text-white' : `text-${color}-500`
+                          }`} />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold">{title}</p>
+                          <p className="text-xs opacity-70">{desc}</p>
+                        </div>
+                      </Button>
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                        {tooltip}
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* School Attendance Section */}
+              <div className="space-y-4">
+                <label className="text-base font-semibold flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
+                    <School className="h-4 w-4 text-purple-600" />
+                  </div>
+                  School Attendance Pattern
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="relative group">
+                    <Button
+                      variant={riskFormData.schoolAttendance ? "default" : "outline"}
+                      onClick={() => setRiskFormData(prev => ({...prev, schoolAttendance: true}))}
+                      className={`h-14 w-full flex flex-col gap-1 p-3 ${
+                        riskFormData.schoolAttendance 
+                          ? 'bg-gradient-to-br from-primary to-primary/80 text-white shadow-lg' 
+                          : 'hover:bg-green-50 border-green-200'
+                      }`}
+                    >
+                      <div className="flex items-center justify-center">
+                        <CheckCircle2 className={`h-4 w-4 ${
+                          riskFormData.schoolAttendance ? 'text-white' : 'text-green-500'
+                        }`} />
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs font-semibold">Regular</p>
+                        <p className="text-xs opacity-70">School participation</p>
+                      </div>
+                    </Button>
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                      Regular Attendance: Consistent school participation with access to mid-day meals
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                    </div>
+                  </div>
+                  <div className="relative group">
+                    <Button
+                      variant={!riskFormData.schoolAttendance ? "default" : "outline"}
+                      onClick={() => setRiskFormData(prev => ({...prev, schoolAttendance: false}))}
+                      className={`h-14 w-full flex flex-col gap-1 p-3 ${
+                        !riskFormData.schoolAttendance 
+                          ? 'bg-gradient-to-br from-orange to-orange/80 text-white shadow-lg' 
+                          : 'hover:bg-red-50 border-red-200'
+                      }`}
+                    >
+                      <div className="flex items-center justify-center">
+                        <X className={`h-4 w-4 ${
+                          !riskFormData.schoolAttendance ? 'text-white' : 'text-red-500'
+                        }`} />
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs font-semibold">Irregular</p>
+                        <p className="text-xs opacity-70">Limited participation</p>
+                      </div>
+                    </Button>
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                      Irregular Attendance: Inconsistent school participation with limited meal program access
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Generate Button */}
+              <div className="pt-4">
+                <Button className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-xl flex items-center gap-3">
+                  <Brain className="h-6 w-6" />
+                  Generate AI Risk Assessment
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Results Panel */}
+        <div className="space-y-6">
+          <Card className="shadow-xl border-2 border-orange/20">
+            <CardHeader className="bg-gradient-to-r from-orange/5 to-orange/10 border-b border-orange/20">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <div className="h-8 w-8 rounded-full bg-orange/20 flex items-center justify-center">
+                  <Brain className="h-4 w-4 text-orange" />
+                </div>
+                AI Risk Analysis
+              </CardTitle>
+              <CardDescription>Real-time assessment results</CardDescription>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              <div className="text-center">
+                <div className="relative h-32 w-32 mx-auto mb-4">
+                  <svg className="h-full w-full transform -rotate-90" viewBox="0 0 36 36">
+                    <path
+                      className="stroke-muted"
+                      strokeWidth="4"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      className="stroke-orange"
+                      strokeWidth="4"
+                      strokeDasharray="67, 100"
+                      strokeLinecap="round"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-3xl font-bold text-orange">67%</span>
+                    <span className="text-xs text-muted-foreground uppercase tracking-wide">Risk Score</span>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="bg-orange/10 text-orange border-orange/20 px-4 py-2 font-semibold">
+                  Medium Risk Level
+                </Badge>
+              </div>
+
+              <div className="space-y-4">
+                <div className="p-4 bg-orange/5 rounded-xl border border-orange/20">
+                  <h4 className="font-bold text-orange mb-3 flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4" />
+                    AI Recommendations
+                  </h4>
+                  <ul className="space-y-3 text-sm">
+                    <li className="flex items-start gap-3">
+                      <div className="h-5 w-5 rounded-full bg-orange/20 flex items-center justify-center mt-0.5">
+                        <CheckCircle2 className="h-3 w-3 text-orange" />
+                      </div>
+                      <span>Increase meal frequency to 3 times daily</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="h-5 w-5 rounded-full bg-orange/20 flex items-center justify-center mt-0.5">
+                        <CheckCircle2 className="h-3 w-3 text-orange" />
+                      </div>
+                      <span>Add protein-rich foods like dal, eggs, or milk</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="h-5 w-5 rounded-full bg-orange/20 flex items-center justify-center mt-0.5">
+                        <CheckCircle2 className="h-3 w-3 text-orange" />
+                      </div>
+                      <span>Include green vegetables in daily diet</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-4 bg-card/50 rounded-xl border border-border/50 text-center">
+                    <Calendar className="h-6 w-6 mx-auto mb-2 text-primary" />
+                    <p className="text-xs uppercase text-muted-foreground mb-1 tracking-wide">Prediction Window</p>
+                    <p className="font-bold text-lg">14-30</p>
+                    <p className="text-xs text-muted-foreground">Days</p>
+                  </div>
+                  <div className="p-4 bg-card/50 rounded-xl border border-border/50 text-center">
+                    <Target className="h-6 w-6 mx-auto mb-2 text-primary" />
+                    <p className="text-xs uppercase text-muted-foreground mb-1 tracking-wide">Confidence</p>
+                    <p className="font-bold text-lg text-primary">91%</p>
+                    <p className="text-xs text-muted-foreground">Accuracy</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2 text-green-700">
+                <BarChart3 className="h-5 w-5" />
+                Risk Factor Analysis
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { factor: 'Age Factor', impact: 25, color: 'bg-blue-500', icon: User },
+                  { factor: 'Meal Frequency', impact: 35, color: 'bg-orange-500', icon: Utensils },
+                  { factor: 'Protein Intake', impact: 30, color: 'bg-green-500', icon: Apple },
+                  { factor: 'School Attendance', impact: 10, color: 'bg-purple-500', icon: School }
+                ].map((item, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <item.icon className="h-4 w-4 text-green-700" />
+                        <span className="text-sm font-medium text-green-800">{item.factor}</span>
+                      </div>
+                      <span className="text-sm font-bold text-green-700">{item.impact}%</span>
+                    </div>
+                    <div className="w-full bg-green-200 rounded-full h-2">
+                      <div 
+                        className={`${item.color} h-2 rounded-full transition-all duration-1000`} 
+                        style={{width: `${item.impact}%`}} 
+                      />
+                    </div>
+                  </div>
                 ))}
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <Apple className="h-4 w-4" />
-                Protein Intake Level
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {["low", "medium", "high"].map(level => (
-                  <Button
-                    key={level}
-                    variant={riskFormData.proteinIntake === level ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setRiskFormData(prev => ({...prev, proteinIntake: level}))}
-                    className="capitalize"
-                  >
-                    {level}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <School className="h-4 w-4" />
-                School Attendance
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  variant={riskFormData.schoolAttendance ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setRiskFormData(prev => ({...prev, schoolAttendance: true}))}
-                >
-                  Regular
-                </Button>
-                <Button
-                  variant={!riskFormData.schoolAttendance ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setRiskFormData(prev => ({...prev, schoolAttendance: false}))}
-                >
-                  Irregular
-                </Button>
-              </div>
-            </div>
-
-            <Button className="w-full h-12 text-base font-semibold">
-              Generate Risk Score
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">AI Risk Analysis</CardTitle>
-            <CardDescription>Real-time risk assessment and recommendations</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="text-center py-6">
-              <div className="relative h-32 w-32 mx-auto mb-4">
-                <svg className="h-full w-full" viewBox="0 0 36 36">
-                  <path
-                    className="stroke-muted"
-                    strokeWidth="3"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    className="stroke-orange"
-                    strokeWidth="3"
-                    strokeDasharray="67, 100"
-                    strokeLinecap="round"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-3xl font-bold text-orange">67%</span>
-                  <span className="text-xs text-muted-foreground uppercase">Risk Score</span>
-                </div>
-              </div>
-              <Badge variant="secondary" className="bg-orange/10 text-orange border-orange/20">
-                Medium Risk
-              </Badge>
-            </div>
-
-            <div className="space-y-4">
-              <div className="p-4 bg-orange/5 rounded-lg border border-orange/20">
-                <h4 className="font-semibold text-orange mb-2">AI Recommendations</h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-orange mt-0.5 shrink-0" />
-                    Increase meal frequency to 3 times daily
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-orange mt-0.5 shrink-0" />
-                    Add protein-rich foods like dal, eggs, or milk
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-orange mt-0.5 shrink-0" />
-                    Include green vegetables in daily diet
-                  </li>
-                </ul>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-muted/50 rounded-lg text-center">
-                  <p className="text-xs uppercase text-muted-foreground mb-1">Prediction Window</p>
-                  <p className="font-bold">14-30 Days</p>
-                </div>
-                <div className="p-3 bg-muted/50 rounded-lg text-center">
-                  <p className="text-xs uppercase text-muted-foreground mb-1">Confidence</p>
-                  <p className="font-bold">91%</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )
@@ -1152,9 +1555,16 @@ export default function YellowsenseDashboard() {
         title="AI Interventions"
         subtitle="Automated supply optimization and resource allocation powered by machine learning."
         actions={
-          <Badge variant="outline" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 rounded-full">
-            8 Active Routes
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 rounded-full flex items-center gap-2">
+              <Zap className="h-4 w-4" />
+              8 Active Routes
+            </Badge>
+            <Button variant="outline" size="sm" className="gap-2">
+              <MapIcon className="h-4 w-4" />
+              Route Optimizer
+            </Button>
+          </div>
         }
       />
 
@@ -1190,30 +1600,177 @@ export default function YellowsenseDashboard() {
         />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Active Supply Routes</CardTitle>
-          <CardDescription>Real-time AI-optimized logistics</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {[
-            { from: 'Central Hub A', to: 'Alpha-9', status: 'In Transit', eta: '2.5h', efficiency: '94%' },
-            { from: 'Regional Depot', to: 'Delta-7', status: 'Loading', eta: '4.0h', efficiency: '87%' },
-            { from: 'Emergency Stock', to: 'Echo-5', status: 'Dispatched', eta: '1.8h', efficiency: '96%' }
-          ].map((route, i) => (
-            <div key={i} className="flex items-center justify-between p-4 bg-primary/5 rounded-lg border border-primary/20">
-              <div>
-                <p className="font-semibold">{route.from} → {route.to}</p>
-                <p className="text-sm text-muted-foreground">{route.status} • ETA: {route.eta}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-bold text-primary">{route.efficiency}</p>
-                <p className="text-xs text-muted-foreground">Efficiency</p>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="shadow-lg border-2 border-primary/20">
+          <CardHeader className="bg-gradient-to-r from-primary/5 to-primary/10">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Zap className="h-5 w-5 text-primary" />
+              Active Supply Routes
+            </CardTitle>
+            <CardDescription>Real-time AI-optimized logistics</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="space-y-0">
+              {[
+                { 
+                  from: 'Central Hub A', 
+                  to: 'Alpha-9', 
+                  status: 'In Transit', 
+                  eta: '2.5h', 
+                  efficiency: '94%', 
+                  priority: 'Critical',
+                  supplies: '500 units',
+                  driver: 'Raj Kumar'
+                },
+                { 
+                  from: 'Regional Depot', 
+                  to: 'Delta-7', 
+                  status: 'Loading', 
+                  eta: '4.0h', 
+                  efficiency: '87%', 
+                  priority: 'High',
+                  supplies: '320 units',
+                  driver: 'Priya Singh'
+                },
+                { 
+                  from: 'Emergency Stock', 
+                  to: 'Echo-5', 
+                  status: 'Dispatched', 
+                  eta: '1.8h', 
+                  efficiency: '96%', 
+                  priority: 'Critical',
+                  supplies: '750 units',
+                  driver: 'Ahmed Ali'
+                }
+              ].map((route, i) => (
+                <div key={i} className="p-4 border-b border-primary/10 hover:bg-primary/5 transition-all cursor-pointer">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
+                        route.status === 'In Transit' ? 'bg-blue-100 text-blue-600' :
+                        route.status === 'Loading' ? 'bg-orange-100 text-orange-600' :
+                        'bg-green-100 text-green-600'
+                      }`}>
+                        {route.status === 'In Transit' ? <MapIcon className="h-5 w-5" /> : 
+                         route.status === 'Loading' ? <BarChart3 className="h-5 w-5" /> : 
+                         <CheckCircle2 className="h-5 w-5" />}
+                      </div>
+                      <div>
+                        <p className="font-semibold">{route.from} → {route.to}</p>
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                          <span>👨‍🚒 {route.driver}</span>
+                          <span>📦 {route.supplies}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-primary">{route.efficiency}</p>
+                      <Badge variant={route.priority === 'Critical' ? 'destructive' : 'secondary'} className="text-xs">
+                        {route.priority}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        route.status === 'In Transit' ? 'bg-blue-100 text-blue-700' :
+                        route.status === 'Loading' ? 'bg-orange-100 text-orange-700' :
+                        'bg-green-100 text-green-700'
+                      }`}>
+                        {route.status}
+                      </div>
+                      <span className="text-sm text-muted-foreground flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        ETA: {route.eta}
+                      </span>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" className="h-7 px-3 text-xs">
+                        Track
+                      </Button>
+                      <Button size="sm" className="h-7 px-3 text-xs">
+                        Contact
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        <div className="space-y-6">
+          <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2 text-green-700">
+                <Target className="h-5 w-5" />
+                Optimization Metrics
+              </CardTitle>
+              <CardDescription className="text-green-600">AI-driven performance indicators</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-4 bg-white/50 rounded-lg">
+                  <TrendingUp className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                  <p className="text-2xl font-bold text-green-600">34%</p>
+                  <p className="text-xs text-green-600">Faster Delivery</p>
+                </div>
+                <div className="text-center p-4 bg-white/50 rounded-lg">
+                  <BarChart3 className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                  <p className="text-2xl font-bold text-green-600">$2.4M</p>
+                  <p className="text-xs text-green-600">Cost Savings</p>
+                </div>
+                <div className="text-center p-4 bg-white/50 rounded-lg">
+                  <Zap className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                  <p className="text-2xl font-bold text-green-600">28%</p>
+                  <p className="text-xs text-green-600">Fuel Reduction</p>
+                </div>
+                <div className="text-center p-4 bg-white/50 rounded-lg">
+                  <Globe className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                  <p className="text-2xl font-bold text-green-600">15%</p>
+                  <p className="text-xs text-green-600">Carbon Footprint</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 border-blue-200">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
+              <CardTitle className="text-lg flex items-center gap-2 text-blue-700">
+                <Brain className="h-5 w-5" />
+                AI Route Optimizer
+              </CardTitle>
+              <CardDescription className="text-blue-600">Machine learning recommendations</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4" />
+                  Smart Suggestions
+                </h4>
+                <ul className="space-y-2 text-sm text-blue-600">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-blue-500 mt-0.5 shrink-0" />
+                    <span>Reroute via Highway 47 saves 45 minutes</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-blue-500 mt-0.5 shrink-0" />
+                    <span>Consolidate Delta-7 and Echo-5 deliveries</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-blue-500 mt-0.5 shrink-0" />
+                    <span>Weather alert: Rain expected in 3 hours</span>
+                  </li>
+                </ul>
+              </div>
+              <Button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 flex items-center gap-2">
+                <ArrowRight className="h-4 w-4" />
+                Apply AI Optimizations
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   )
 
@@ -1288,7 +1845,7 @@ export default function YellowsenseDashboard() {
             </Badge>
           </div>
           <p className="text-sm font-medium text-muted-foreground">
-            © 2025 Yellowsense Technologies. All rights reserved.
+            © 2025 Nourish AI Technologies. All rights reserved.
           </p>
           <p className="text-xs text-muted-foreground/60">AI Nourishment Intelligence System | Version 4.2.0-Alpha</p>
         </div>

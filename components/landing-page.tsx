@@ -64,7 +64,7 @@ export default function LandingPage() {
                 <Apple className="h-6 w-6 text-white drop-shadow-sm" />
               </div>
               <div>
-                <h1 className="font-bold text-lg bg-gradient-to-r from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] bg-clip-text text-transparent">Nourishment AI</h1>
+                <h1 className="font-bold text-lg bg-gradient-to-r from-[#6FBF44] via-[#F6A23A] to-[#E94A7F] bg-clip-text text-transparent">Nourish AI</h1>
                 <p className="text-xs text-muted-foreground font-medium">Intelligence System</p>
               </div>
             </div>
