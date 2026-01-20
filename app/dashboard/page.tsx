@@ -173,10 +173,11 @@ export default function YellowsenseDashboard() {
         <div className="space-y-3">
           <Button 
             variant="outline" 
-            className="w-full justify-start gap-2 text-sm"
+            className="w-full justify-start gap-3 text-sm font-medium bg-gradient-to-r from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/15 border-primary/20 text-primary hover:text-primary transition-all duration-200 shadow-sm hover:shadow-md"
             onClick={() => router.push('/')}
           >
-            ← Back to Home
+            <Home className="h-4 w-4" />
+            Back to Home
           </Button>
           <div className="flex items-center gap-3 p-3 rounded-xl bg-sidebar-accent/30">
             <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -651,7 +652,7 @@ export default function YellowsenseDashboard() {
         actions={
           <div className="flex items-center gap-3">
             <Badge variant="outline" className="px-4 py-2 bg-destructive/10 text-destructive border-destructive/20 rounded-full animate-pulse">
-              🚨 12 Active Alerts
+              <AlertTriangle className="h-4 w-4 mr-2" /> 12 Active Alerts
             </Badge>
             <Button variant="outline" size="sm" className="gap-2">
               <Bell className="h-4 w-4" />
@@ -722,9 +723,9 @@ export default function YellowsenseDashboard() {
                       <div>
                         <p className="font-semibold text-destructive">{cluster.name}</p>
                         <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                          <span>👥 {cluster.population}</span>
-                          <span>⏱️ ETA: {cluster.eta}</span>
-                          <span>🚨 {cluster.lastAlert}</span>
+                          <span className="flex items-center gap-1"><Users className="h-3 w-3" />{cluster.population}</span>
+                          <span className="flex items-center gap-1"><Clock className="h-3 w-3" />ETA: {cluster.eta}</span>
+                          <span className="flex items-center gap-1"><Bell className="h-3 w-3" />{cluster.lastAlert}</span>
                         </div>
                       </div>
                     </div>
@@ -764,13 +765,13 @@ export default function YellowsenseDashboard() {
           </CardHeader>
           <CardContent className="space-y-4">
             {[
-              { time: '2 min ago', type: 'Critical', message: 'Alpha-9 cluster exceeded 90% risk threshold', icon: '🚨' },
-              { time: '15 min ago', type: 'Warning', message: 'Delta-7 showing rapid deterioration', icon: '⚠️' },
-              { time: '32 min ago', type: 'Info', message: 'Echo-5 intervention supplies dispatched', icon: '📦' },
-              { time: '1 hour ago', type: 'Success', message: 'Beta-3 risk level decreased to medium', icon: '✅' }
+              { time: '2 min ago', type: 'Critical', message: 'Alpha-9 cluster exceeded 90% risk threshold', icon: <AlertTriangle className="h-4 w-4 text-destructive" /> },
+              { time: '15 min ago', type: 'Warning', message: 'Delta-7 showing rapid deterioration', icon: <TrendingUp className="h-4 w-4 text-orange" /> },
+              { time: '32 min ago', type: 'Info', message: 'Echo-5 intervention supplies dispatched', icon: <BarChart3 className="h-4 w-4 text-blue-500" /> },
+              { time: '1 hour ago', type: 'Success', message: 'Beta-3 risk level decreased to medium', icon: <CheckCircle2 className="h-4 w-4 text-green-500" /> }
             ].map((alert, i) => (
               <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
-                <div className="text-lg">{alert.icon}</div>
+              <div className="text-lg">{alert.icon}</div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
                     <Badge variant={alert.type === 'Critical' ? 'destructive' : alert.type === 'Warning' ? 'secondary' : 'outline'} className="text-xs">
@@ -798,7 +799,7 @@ export default function YellowsenseDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-3">
-                <span className="text-2xl">🎯</span>
+                <Target className="h-8 w-8 text-primary" />
               </div>
               <h4 className="font-semibold text-primary mb-1">Prediction Accuracy</h4>
               <p className="text-3xl font-bold text-primary">94.2%</p>
@@ -806,7 +807,7 @@ export default function YellowsenseDashboard() {
             </div>
             <div className="text-center">
               <div className="h-16 w-16 rounded-full bg-orange/20 flex items-center justify-center mx-auto mb-3">
-                <span className="text-2xl">⚡</span>
+                <Zap className="h-8 w-8 text-orange" />
               </div>
               <h4 className="font-semibold text-orange mb-1">Early Detection</h4>
               <p className="text-3xl font-bold text-orange">14-30</p>
@@ -814,7 +815,7 @@ export default function YellowsenseDashboard() {
             </div>
             <div className="text-center">
               <div className="h-16 w-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-3">
-                <span className="text-2xl">🛡️</span>
+                <Shield className="h-8 w-8 text-green-600" />
               </div>
               <h4 className="font-semibold text-green-600 mb-1">Prevention Rate</h4>
               <p className="text-3xl font-bold text-green-600">87%</p>
@@ -921,11 +922,18 @@ export default function YellowsenseDashboard() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="bg-primary/5 rounded-full flex items-center gap-2 cursor-pointer hover:bg-primary/10 transition-colors px-3 py-1" onClick={() => {}}>
-                    <Globe className="h-3 w-3" />
-                    {selectedLanguage}
-                    <ChevronDown className="h-3 w-3" />
-                  </Badge>
+                  <div className="relative">
+                    <select 
+                      value={selectedLanguage} 
+                      onChange={(e) => setSelectedLanguage(e.target.value)}
+                      className="bg-primary/5 rounded-full flex items-center gap-2 cursor-pointer hover:bg-primary/10 transition-colors px-3 py-1 border border-primary/20 text-sm appearance-none pr-8"
+                    >
+                      {languages.map((lang) => (
+                        <option key={lang} value={lang}>{lang}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="h-3 w-3 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-primary" />
+                  </div>
                   <Button size="sm" variant="outline" className="gap-2">
                     <Users className="h-3 w-3" />
                     History
