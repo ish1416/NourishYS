@@ -958,135 +958,138 @@ export default function YellowsenseDashboard() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatsCard
-          title="Critical Alerts"
-          value="4"
-          subtitle="Immediate action required"
-          icon={<AlertTriangle />}
-          progress={100}
-          progressColor="destructive"
-        />
-        <StatsCard
-          title="Medium Risk"
-          value="6"
-          subtitle="Monitor closely"
-          icon={<TrendingUp />}
-          progress={60}
-        />
-        <StatsCard
-          title="Low Risk"
-          value="2"
-          subtitle="Stable conditions"
-          icon={<CheckCircle2 />}
-          progress={20}
-          progressColor="primary"
-        />
-        <StatsCard
-          title="Response Time"
-          value="2.3h"
-          subtitle="Average alert response"
-          icon={<Clock />}
-          progress={85}
-        />
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="border-l-4 border-l-destructive shadow-lg">
           <CardHeader className="bg-gradient-to-r from-destructive/5 to-destructive/10">
             <CardTitle className="text-lg text-destructive flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 animate-pulse" />
-              Critical Risk Clusters
+              Malnutrition Early Warning Indicators
             </CardTitle>
-            <CardDescription>Immediate intervention required</CardDescription>
+            <CardDescription>Key signs and symptoms to monitor for early intervention</CardDescription>
           </CardHeader>
-          <CardContent className="p-0">
-            <div className="space-y-0">
-              {[
-                { name: 'Alpha-9', risk: 92, population: '45K', eta: '6 hours', severity: 'Critical', lastAlert: '5 min ago', interventions: 3 },
-                { name: 'Delta-7', risk: 87, population: '32K', eta: '4 hours', severity: 'High', lastAlert: '12 min ago', interventions: 2 },
-                { name: 'Echo-5', risk: 83, population: '28K', eta: '8 hours', severity: 'High', lastAlert: '8 min ago', interventions: 1 }
-              ].map((cluster, i) => (
-                <div key={i} className="p-4 border-b border-destructive/10 hover:bg-destructive/5 transition-all cursor-pointer">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                    <div className="relative flex-shrink-0">
-                      <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-destructive/20 flex items-center justify-center">
-                        <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-destructive" />
-                      </div>
-                      <div className="absolute -top-1 -right-1 h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-destructive animate-ping" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-destructive text-sm sm:text-base truncate">{cluster.name}</p>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs sm:text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1"><Users className="h-3 w-3" />{cluster.population}</span>
-                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />ETA: {cluster.eta}</span>
-                        <span className="flex items-center gap-1 truncate"><Bell className="h-3 w-3" />{cluster.lastAlert}</span>
-                      </div>
-                    </div>
+          <CardContent className="p-6 space-y-4">
+            <div className="space-y-4">
+              <div className="p-4 bg-destructive/5 rounded-lg border border-destructive/20">
+                <h4 className="font-semibold text-destructive mb-3 flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Physical Warning Signs
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-destructive" />
+                    <span>Rapid weight loss or failure to gain weight</span>
                   </div>
-                  <div className="text-right flex-shrink-0">
-                    <p className="text-xl sm:text-2xl font-bold text-destructive">{cluster.risk}%</p>
-                    <Badge variant="destructive" className="text-xs">{cluster.severity}</Badge>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-destructive" />
+                    <span>Visible ribs, spine, or hip bones</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-destructive" />
+                    <span>Swelling in legs, feet, or face</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-destructive" />
+                    <span>Hair changes (thinning, color loss, brittle)</span>
                   </div>
                 </div>
-                  <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 sm:gap-4">
-                      <div className="bg-card/50 px-2 sm:px-3 py-1 rounded-full border border-destructive/20">
-                        <span className="text-xs text-muted-foreground">Active: {cluster.interventions}</span>
-                      </div>
-                    </div>
-                    <div className="flex gap-2 w-full sm:w-auto">
-                      <Button size="sm" variant="destructive" className="h-7 px-2 sm:px-3 text-xs flex-1 sm:flex-none">
-                        Emergency
-                      </Button>
-                      <Button size="sm" variant="outline" className="h-7 px-2 sm:px-3 text-xs flex-1 sm:flex-none">
-                        Details
-                      </Button>
-                    </div>
+              </div>
+              
+              <div className="p-4 bg-orange/5 rounded-lg border border-orange/20">
+                <h4 className="font-semibold text-orange mb-3 flex items-center gap-2">
+                  <Activity className="h-4 w-4" />
+                  Behavioral Warning Signs
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-orange" />
+                    <span>Decreased energy and activity levels</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-orange" />
+                    <span>Irritability or mood changes</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-orange" />
+                    <span>Difficulty concentrating or learning</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-orange" />
+                    <span>Frequent infections or slow healing</span>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-orange shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-orange/5 to-orange/10">
-            <CardTitle className="text-lg text-orange flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Alert Timeline
+        <Card className="border-l-4 border-l-primary shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-primary/5 to-primary/10">
+            <CardTitle className="text-lg text-primary flex items-center gap-2">
+              <Shield className="h-5 w-5" />
+              Prevention & Early Intervention
             </CardTitle>
-            <CardDescription>Recent warning system activity</CardDescription>
+            <CardDescription>Proactive measures to prevent malnutrition</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {[
-              { time: '2 min ago', type: 'Critical', message: 'Alpha-9 cluster exceeded 90% risk threshold', icon: <AlertTriangle className="h-4 w-4 text-destructive" /> },
-              { time: '15 min ago', type: 'Warning', message: 'Delta-7 showing rapid deterioration', icon: <TrendingUp className="h-4 w-4 text-orange" /> },
-              { time: '32 min ago', type: 'Info', message: 'Echo-5 intervention supplies dispatched', icon: <BarChart3 className="h-4 w-4 text-blue-500" /> },
-              { time: '1 hour ago', type: 'Success', message: 'Beta-3 risk level decreased to medium', icon: <CheckCircle2 className="h-4 w-4 text-green-500" /> }
-            ].map((alert, i) => (
-              <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
-              <div className="text-lg">{alert.icon}</div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <Badge variant={alert.type === 'Critical' ? 'destructive' : alert.type === 'Warning' ? 'secondary' : 'outline'} className="text-xs">
-                      {alert.type}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">{alert.time}</span>
+          <CardContent className="p-6 space-y-4">
+            <div className="space-y-4">
+              <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                  <Utensils className="h-4 w-4" />
+                  Nutritional Interventions
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <ArrowRight className="h-4 w-4 text-primary" />
+                    <span>Increase meal frequency to 4-6 times daily</span>
                   </div>
-                  <p className="text-sm">{alert.message}</p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <ArrowRight className="h-4 w-4 text-primary" />
+                    <span>Add protein-rich foods (dal, eggs, milk)</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <ArrowRight className="h-4 w-4 text-primary" />
+                    <span>Include iron-rich foods (green leafy vegetables)</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <ArrowRight className="h-4 w-4 text-primary" />
+                    <span>Ensure adequate hydration (8-10 glasses water)</span>
+                  </div>
                 </div>
               </div>
-            ))}
+              
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-700 mb-3 flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  Monitoring Schedule
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-green-600">
+                    <Calendar className="h-4 w-4" />
+                    <span>Weekly weight monitoring</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-green-600">
+                    <Calendar className="h-4 w-4" />
+                    <span>Monthly growth assessment</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-green-600">
+                    <Calendar className="h-4 w-4" />
+                    <span>Quarterly health check-ups</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-green-600">
+                    <Calendar className="h-4 w-4" />
+                    <span>Immediate medical referral if critical</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20">
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Brain className="h-5 w-5 text-primary" />
+          <CardTitle className="text-lg flex items-center gap-2 text-primary">
+            <Brain className="h-5 w-5" />
             AI Prediction Model
           </CardTitle>
           <CardDescription>Machine learning insights and forecasting accuracy</CardDescription>
